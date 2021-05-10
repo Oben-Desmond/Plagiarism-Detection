@@ -1,0 +1,28 @@
+/* .starred-card{
+    --inner-padding:0px;
+    --inner-padding-end:0px;
+    --inner-padding-start:0px;
+    --padding-start:0px;
+    --inner-padding-top:0;
+    
+}
+
+.starred-card ion-row {
+  padding: 8px 10px;
+}
+
+.starred-card ion-grid ion-col{
+    height:60px
+  }
+  .starred-card ion-grid ion-row ion-img{
+    height:60px
+  } */
+  .starred-card {
+    position: relative;
+  }
+.starred-card ion-toolbar.header{
+  --background:rgba(0,0,0, 0.04);
+   
+  position: absolute;
+  width: 100%;
+}

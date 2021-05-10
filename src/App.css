@@ -1,0 +1,64 @@
+:root {
+    font-family: 'Segoe UI';
+    box-sizing: border-box;
+}
+
+ion-content{
+    --background: transparent;
+}
+
+.ion-app{
+    overflow-y: scroll !important;
+}
+
+ion-searchbar.search-bar{
+    --border-radius: 30px;
+    --cancel-button-color: var(--ion-color-success);
+    --clear-button-color: var(--ion-color-light);
+    --placeholder: var(--ion-color-light);
+    --color: var(--ion-color-light);
+    --icon-color: var(--ion-color-light);
+    --background:  rgb(0, 0, 0);
+}
+.content-home{
+    --background:rgb(232, 236, 233);
+}
+
+ion-tab-button{
+    --color-selected: var(--ion-color-success);
+    /* --color-fused: var(--ion-color-success);*/
+    --color: var(--ion-color-light); 
+}
+
+ion-tab-bar{
+    --background: var(--ion-color-dark);
+}
+/* ion-tab-button:focus{
+    --color-selected: var(--ion-color-success);
+} */
+
+ion-fab-button.ssearch-button{
+    width: 300px;
+}
+
+.cart-modal{
+    padding-top: 12vh;
+    --background:transparent
+}
+.cart-modal{
+    /* border-radius: 30px; */
+}
+.cart-modal  ion-header{
+     
+  
+}
+.cart-modal ion-header>ion-toolbar{
+    border-radius: 15px  15px 0 0;
+    padding: 0 10px ;
+}
+.cart-modal ion-list{
+    --background: black
+}
+ion-content{
+    background-color: var(--ion-color-light) ;
+}

@@ -1,0 +1,17 @@
+.loading{
+  
+    padding: 40vh 20vw 0vh 20vw;
+  
+}
+
+.loading>ion-progress-bar{
+    
+}
+.loading ion-title{
+    margin: auto;
+}
+
+.loading>div{
+    text-align: center;
+    padding: 20px;
+}

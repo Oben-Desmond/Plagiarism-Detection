@@ -1,0 +1,17 @@
+ion-grid,ion-col,ion-row{
+    padding:0;
+    margin:0;
+     
+}
+ 
+ .header-div{
+      background :#222428;
+ }
+ .header-div ion-title{
+     color:white
+ }
+ .header-div ion-searchbar{
+    --background:  #313233;
+      --color:var(--ion-color-light)
+  
+}

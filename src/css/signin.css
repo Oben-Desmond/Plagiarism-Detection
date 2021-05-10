@@ -1,0 +1,13 @@
+.fire-signin .firebaseui-card-actions button{
+  background-color: var(--ion-color-primary) !important;
+   
+}
+
+.login-slides ion-slide{
+  display: block;
+  height: 90vh;
+  background:white;
+}
+.login-slides ion-title{
+  margin-bottom: 13px;
+}
