@@ -233,9 +233,7 @@ const Saved: React.FC = () => {
                     </IonCardContent>
                 </>
 
-                }
-
-
+                } 
                 {
                     displaySavedPapers.map((paper, index) => {
                         const starred = (starredPapersKeys.indexOf(paper.id) >= 0) ? true : false;

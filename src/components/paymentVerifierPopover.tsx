@@ -34,7 +34,10 @@ const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,pa
                             <div style={{ paddingTop: `0.5px` }}>.</div>
                             <IonNote>you can now access your papers at anytime on the platform</IonNote><br />
                             <div style={{ paddingTop: `0.5px` }}>.</div>
-                            <IonButton shape={`round`}>Ok</IonButton>
+                            <IonButton shape={`round`}>
+                                <IonBackdrop></IonBackdrop>
+                                <IonLabel>Ok</IonLabel>
+                            </IonButton>
                         </IonCardContent>
                     </IonCol>
                 </IonRow>
