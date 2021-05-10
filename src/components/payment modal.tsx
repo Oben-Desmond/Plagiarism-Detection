@@ -11,22 +11,19 @@ import "../zitopay";
 const { Storage } = Plugins
 const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: boolean, reference: string }> = ({ onDidDismiss, isOpen, cost, reference }) => {
 
-    const colors = [`dark`, `warning`, `success`, `medium`,`danger`]
-    const paybtnRef = useRef<HTMLButtonElement>(null)
+    const colors = [`dark`, `warning`, `success`, `medium`, `danger`]
+    const paybtnRef = useRef<HTMLDivElement>(null)
+    const [change, setchange] = useState(0)
     const [spinnerColor, setspinnerColor] = useState(`dark`)
 
     useEffect(() => {
-        if (paybtnRef.current && isOpen) {
-            paybtnRef.current?.click();
-        }
-      console.log(paybtnRef.current && isOpen)
 
     }, [isOpen])
 
 
 
     return (
-        <IonModal onDidPresent={() => { }} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
+        <IonModal onDidPresent={() => { paybtnRef.current?.click(); }} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
             <IonHeader mode='md'>
                 <IonToolbar  >
                     <IonLabel> Confirm Payment <IonBadge color='success' mode='ios'>{cost}</IonBadge></IonLabel>
@@ -39,7 +36,7 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-               
+
                 <IonToolbar mode='md' style={{ minHeight: `100%`, overflow: `scroll` }} color='light'>
                     {/* <IonGrid>
                          
@@ -51,23 +48,24 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
                             <IonCol></IonCol>
                         </IonRow>
                     </IonGrid> */}
-                    <IonToolbar color={`medium`}>
-                    <div style={{ position: `relative` }} id="zitopayDiv"></div>
+                    <IonToolbar style={{ minHeight: `50vh` }} color={`medium`}>
+                        <div style={{ position: `relative` }} id="zitopayDiv"></div>
+                        <div
+                            ref={paybtnRef}
+                            color="dark"
+                            className="pay-with-zitopay"
+                            data-amount={cost}
+                            data-currency="XAF"
+                            data-email="ndehngwa@gmail.com"
+                            data-receiver="akumah"
+                            data-ref={reference}
+                            success-url="https://quesers-app.web.app"
+                        ></div>
                     </IonToolbar>
                 </IonToolbar>
-                <button
-                    ref={paybtnRef}
-                    color="dark"
-                    className="pay-with-zitopay"
-                    data-amount={cost}
-                    data-currency="XAF"
-                    data-email="ndehngwa@gmail.com"
-                    data-receiver="akumah"
-                    success-url="https://quesers-app.web.app"
-                    data-ref={reference}
-                >..</button>
-                 </IonContent>
-                
+
+            </IonContent>
+
         </IonModal>
     )
 }

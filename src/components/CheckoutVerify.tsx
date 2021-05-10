@@ -1,5 +1,5 @@
 import { Plugins } from "@capacitor/core";
-import { IonButton, IonLabel } from "@ionic/react";
+import { IonButton, IonLabel, IonNote } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { localPendingPapers, SearchPaperInterface } from "./componentTypes";
@@ -92,6 +92,11 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         <React.Fragment>
             <div style={{ textAlign: `center`, padding: `6px` }}>
                 <IonButton onClick={() => setinitializePayment(true)} color={`dark`}> <IonLabel color={`primary`}>Download</IonLabel></IonButton>
+            </div>
+            <div>
+                <IonNote>
+                    <small>{reference}</small>
+                </IonNote>
             </div>
             <PaymentVerifierPopover retryTransaction={()=>verifyPaymentSuccess()} isOpen={verifyPayment} onDidDismiss={() => setverifyPayment(false)} paymentStatus={paymentStatus} />
             <PaymentModal reference={reference} cost={costSum} isOpen={initializePayment} 
