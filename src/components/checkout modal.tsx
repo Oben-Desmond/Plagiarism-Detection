@@ -2,7 +2,7 @@ import { IonModal, IonHeader, IonToolbar, IonLabel, IonBadge, IonButtons, IonBut
 import { close } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
 import CheckoutQuestionCard from "./checkoutQuestionCard";
-import { SearchPaperInterface, UploadersTotalDownloads, userInterface } from "./componentTypes";
+import { SearchPaperInterface, userInterface } from "./componentTypes";
 import "./style/checkoutModal.css";
 import { Plugins } from "@capacitor/core";
 import app from "../Firebase";
@@ -10,14 +10,15 @@ import CheckoutVerify from "./CheckoutVerify";
 import { useHistory } from "react-router";
 import { UserContext } from "./RouterOutlet";
 
-const Months = [`January`, `Febuary`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `December`]
+
+
 
 const { Modals } = Plugins
 const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFromAdded: (index: number) => void, isOpen: boolean, onDidDismiss: () => void, CheckOutPapers: SearchPaperInterface[] }> = ({ removePaperFromAdded, isOpen, onDidDismiss, CheckOutPapers }) => {
 
   const [uploading, setuploading] = useState(false)
   const [costSum, setcostSum] = useState(0 + `FCFA`)
-  const { userInfo, setuserInfo } = useContext(UserContext)
+  const { userInfo} = useContext(UserContext)
 
   const history = useHistory()
   useEffect(() => {
@@ -27,7 +28,6 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
       sum += +CheckOutPapers[i].cost
     }
     setcostSum(sum + ` FCFA`)
-    console.log(userInfo)
   }, [CheckOutPapers])
 
 
@@ -74,7 +74,7 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
         if (i >= papers.length - 1) {
           Modals.confirm({ title: `Download SuccessFull`, message: `The Download has completed Successfully.\nGo to Downloads` })
             .then(res => {
-              if (res.value == true) {
+              if (res.value === true) {
                 history.push(`/saved`)
                 onDidDismiss()
               } else {
