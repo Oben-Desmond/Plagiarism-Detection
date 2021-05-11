@@ -22,8 +22,7 @@ const Saved: React.FC = () => {
     const [loadingPapers, setloadingPapers] = useState<boolean>(false)
     const [noPapersSaved, setnoPapersSaved] = useState<boolean>(false)
     const searchBarRef = useRef<HTMLIonSearchbarElement>(null)
-    const [searchBlurred, setsearchBlurred] = useState(true)
-    const [currentUser, setcurrentUser] = useState<userInterface>()
+    const [searchBlurred, setsearchBlurred] = useState(true) 
     const [starToast, setstarToast] = useState(``)
     const [startup, setstartup] = useState(true)
 
@@ -142,6 +141,7 @@ const Saved: React.FC = () => {
 
     async function deleteSavedPaper(paper: savedPaperInterface) {
         const { title, id } = paper
+        const currentUser= userInfo 
         if (currentUser) {
             const res = (await Modals.confirm({ title: `Delete Paper`, message: `Are you sure you want to Delete ${title}?`, okButtonTitle: `Delete` })).value
             if (!res) {

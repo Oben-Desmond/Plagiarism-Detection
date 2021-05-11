@@ -48,6 +48,11 @@ const Validate: React.FC = () => {
                 }
                else if(user.validate==true){
                     history.push(`/search`)
+                    const userVal= (await Storage.get({key:`user`})).value
+                    if(userVal){
+                        setuserInfo(JSON.parse(userVal))
+                        console.log(JSON.parse(userVal))
+                    }
                 }
                 else{
                     history.push(`/login`) 

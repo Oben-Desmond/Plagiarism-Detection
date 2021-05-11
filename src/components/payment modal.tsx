@@ -6,6 +6,7 @@ import { localPendingPapers, SearchPaperInterface, userInterface } from "./compo
 import "./style/checkoutModal.css";
 import { Plugins } from "@capacitor/core";
 import "../zitopay";
+import { getLocalStorageStatus, LocalStorageSetLoadedStatus } from "../data/LocalStorageSetLoadedStatus";
 
 
 const { Storage } = Plugins
@@ -20,10 +21,15 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
 
     }, [isOpen])
 
+    async function clearLoadStatus(){
+        const val = Plugins.Storage.get({key:`pending_notification`})
+        console.log(`original value = `,val)
+       
+    }
 
 
     return (
-        <IonModal onDidPresent={() => { paybtnRef.current?.click(); }} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
+        <IonModal onDidPresent={() => { paybtnRef.current?.click();clearLoadStatus() }} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
             <IonHeader mode='md'>
                 <IonToolbar  >
                     <IonLabel> Confirm Payment <IonBadge color='success' mode='ios'>{cost}</IonBadge></IonLabel>
@@ -48,7 +54,7 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
                             <IonCol></IonCol>
                         </IonRow>
                     </IonGrid> */}
-                    <IonToolbar style={{ minHeight: `50vh` }} color={`medium`}>
+                    <IonToolbar style={{ minHeight: `80vh` }} color={`medium`}>
                         <div style={{ position: `relative` }} id="zitopayDiv"></div>
                         <div
                             ref={paybtnRef}

@@ -1,7 +1,7 @@
 import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButton, IonList, IonFooter, IonFab, IonActionSheet, CreateAnimation } from "@ionic/react";
 import { chatbox, close, ellipsisVertical, shareSocial, star } from "ionicons/icons";
 import "../css/previewModal.css";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { savedPaperInterface } from "./componentTypes";
 import "./style/readmodal.css";
 import { Plugins } from "@capacitor/core";
@@ -31,6 +31,13 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
 
     };
 
+    useEffect(()=>{
+
+    return(()=>{
+        setValue(`0`)
+    })
+    },[])
+
     const handleSegmentChange = (e: any) => {
         setValue(e.detail.value);
         slider.current?.slideTo(e.detail.value);
@@ -41,6 +48,7 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
         await event.target.getActiveIndex().then((value: any) => (index = value));
         setValue('' + index)
     }
+    
     function readfunc() {
         Plugins.Accessibility.speak({ value: thisPaper.title + ` \n find the square are of a square with sides 6 centimeters` })
     }
@@ -85,8 +93,7 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
     return (
         <IonModal
             isOpen={isOpen}
-            onDidDismiss={onDidDismiss}
-        >
+            onDidDismiss={ onDidDismiss }  >
             <IonHeader>
                 <IonToolbar color='dark'>
                     <IonButton fill={`clear`} slot={`start`}>

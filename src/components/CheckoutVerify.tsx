@@ -2,6 +2,7 @@ import { Plugins } from "@capacitor/core";
 import { IonButton, IonLabel, IonNote } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { getLocalStorageStatus, LocalStorageSetLoadedStatus } from "../data/LocalStorageSetLoadedStatus";
 import { localPendingPapers, SearchPaperInterface } from "./componentTypes";
 import PaymentModal from "./payment modal";
 import PaymentVerifierPopover from "./paymentVerifierPopover";
@@ -10,8 +11,9 @@ import { UserContext } from "./RouterOutlet";
 
 
 const { Storage } = Plugins
+const Months = [`January`, `Febuary`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `December`]
 
-const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum: string }> = ({ CheckOutPapers, costSum }) => {
+const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum: string ,validateSavedPapers:()=>void}> = ({ CheckOutPapers, costSum ,validateSavedPapers}) => {
 
 
     const [initializePayment, setinitializePayment] = useState(false)
@@ -23,9 +25,9 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
 
     const { setuserInfo, userInfo } = useContext(UserContext)
 
-    useEffect(()=>{
-       setreference(Math.floor(Math.random() * 1000) + `` + Date.now())
-    },[CheckOutPapers])
+    useEffect(() => {
+        setreference(Math.floor(Math.random() * 1000) + `` + Date.now())
+    }, [CheckOutPapers])
 
     async function savePapersToStorage() {
 
@@ -76,38 +78,43 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
             const data: any = (await response.json())
             console.log(data)
             if (data.status == 1 && data.status_msg == "COMPLETED") {
+                validateSavedPapers();
+                setuploading(true)
                 setpaymentStatus(true)
+                
             } else {
                 setpaymentStatus(false)
             }
-           
+
         }).catch((err) => {
             setpaymentStatus(false)
             console.log(err)
-            
+
         });
     }
 
+    async function onPaymentModalDismissed() {
+        const status = await getLocalStorageStatus()
+        if (status && status == `true`) {
+            verifyPaymentSuccess()
+        }
+        setinitializePayment(false);
+
+
+    }
     return (
         <React.Fragment>
             <div style={{ textAlign: `center`, padding: `6px` }}>
-                <IonButton onClick={() => setinitializePayment(true)} color={`dark`}> <IonLabel color={`primary`}>Download</IonLabel></IonButton>
+             {  !uploading&& <IonButton onClick={() => setinitializePayment(true)} color={`dark`}> <IonLabel color={`primary`}>Download</IonLabel></IonButton>}
             </div>
-            <div>
-                <IonNote>
-                    <small>{reference}</small>
-                </IonNote>
-            </div>
-            <PaymentVerifierPopover retryTransaction={()=>verifyPaymentSuccess()} isOpen={verifyPayment} onDidDismiss={() => setverifyPayment(false)} paymentStatus={paymentStatus} />
-            <PaymentModal reference={reference} cost={costSum} isOpen={initializePayment} 
-            onDidDismiss={() => {
-                setinitializePayment(false);
-                verifyPaymentSuccess()
-            }}></PaymentModal>
+            <PaymentVerifierPopover retryTransaction={() => verifyPaymentSuccess()} isOpen={verifyPayment} onDidDismiss={() => setverifyPayment(false)} paymentStatus={paymentStatus} />
+            <PaymentModal reference={reference} cost={costSum} isOpen={initializePayment}
+                onDidDismiss={onPaymentModalDismissed}></PaymentModal>
 
         </React.Fragment>
     )
 }
 
 export default CheckoutVerify
+
 

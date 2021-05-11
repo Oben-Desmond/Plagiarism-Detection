@@ -1,4 +1,4 @@
-import { Plugins } from "@capacitor/core";
+import { LocalStorageSetLoadedStatus } from "./data/LocalStorageSetLoadedStatus";
 import React from "react";
 
 function isObject(obj) {
@@ -35,6 +35,7 @@ export var Zitopay = function () {
             return str;
         },
         pay: function (options, inline_display) {
+            LocalStorageSetLoadedStatus(false);
             if (typeof inline_display === 'undefined') inline_display = false;
 
             if (!options) return this.log_error("Valid Payment Options Not Supplied", options);
@@ -199,14 +200,14 @@ export var Zitopay = function () {
                 closeSpan.onclick = function () {
                     zitopayCloseBuffer('Closed by user');
                 };
-                closeSpan.innerHTML = '<ion-icon size="large" name="close-circle"></ion-icon>';
+                closeSpan.innerHTML = '<ion-spinner size="large" ></ion-spinner>';
                 closeSpan.style.cssText = cssText;
                 closeSpan.id = 'zitopayCloseToggler';
                 document.getElementById('zitopayDiv').appendChild(closeSpan);
 
                 cssText = 'position:absolute;z-index:2;color:#ffffff;font-weight:bold;font-size:200%;top:30%;left:0px;width:100%;text-align:center;'
                 var loadingSpan = document.createElement("h1");
-                loadingSpan.innerHTML = 'Loading..';
+                loadingSpan.innerHTML = 'Loading...';
                 loadingSpan.style.cssText = cssText;
                 loadingSpan.id = 'zitopayLoading';
                 document.getElementById('zitopayDiv').appendChild(loadingSpan);
@@ -225,7 +226,9 @@ export var Zitopay = function () {
                     functions.onLoad();
                     document.getElementById('zitopayLoading').style.display = 'none';
                     document.getElementById('zitopayPaymentIframe').style.display = 'block';
-                     console.log(`loadedddddddddddd`)
+                    LocalStorageSetLoadedStatus(true);
+                 
+
                     var temp = document.getElementById('zitopayPaymentIframe');
                     window.scrollTo(0, temp.offsetTop);
                 }

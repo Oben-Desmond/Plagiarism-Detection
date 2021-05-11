@@ -25,102 +25,7 @@ const PendingPapersSaved:
         const { setuserInfo, userInfo } = useContext(UserContext)
         const history = useHistory()
 
-        function verifyPayment() {
-            setverifyPopOver(true)
-            const data: any = {
-                "ref": `${paperGroup[0].ref}`,
-                "reciever": `akumah`
-            }
-
-            setpaymentStatus(`pending`)
-
-            const url = 'https://quesers.herokuapp.com/zito-pay';
-            const params = {
-                ...data
-            };
-            const headers = new Headers({
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            });
-
-            let formUrlBody: any = [];
-            formUrlBody = formUrlEncoder(params, formUrlBody);
-
-            fetch(url, {
-                method: 'POST',
-                headers: headers,
-                body: formUrlBody
-            }).then(async response => {
-                const data: any = (await response.json())
-                console.log(data)
-                if (data.status == 1 && data.status_msg == "COMPLETED") {
-                    setpaymentStatus(true)
-                } else {
-                    setpaymentStatus(false)
-                }
-            }).catch((err) => {
-                setpaymentStatus(false)
-                console.log(err)
-            });
-        }
-
-
-        async function savePapersToDatabase() {
-            let tempObject: any = {}
-
-            for (let i = 0; i < paperGroup.length; i++) {
-                const paper = paperGroup[i]
-                tempObject[`${paper.id}`] = paper
-                setuploading(true)
-
-                if (userInfo) {
-                    app.firestore()
-                        .collection(`userInfos`)
-                        .doc(userInfo.tel)
-                        .collection(`papers`)
-                        .doc(`${paper.id}`)
-                        .set(tempObject).then(async () => {
-                            for (let i = 0; i < paperGroup.length; i++) {
-                                const paper = paperGroup[i]
-                                const newdownloads = parseInt(`${paper.downloads}`) != NaN ? parseInt(`${paper.downloads}`) + 1 : paper.downloads
-                                app.database().ref(`allPapers`).child(paper.id).update({ downloads: newdownloads.toString() }).catch(alert)
-
-                                //updating firestore uploaders downloads
-                                const m = (new Date(Date.now())).getMonth(), y = (new Date(Date.now())).getFullYear();
-                                const downloadId = paper.author + `` + Date.now()
-                                const uploaderPaper: UploadersTotalDownloads = { cost: paper.cost, currency: paper.currency, date: `${Date.now()}`, month: `${Months[m]}`, tel: paper.author, year: y.toString() }
-                                app.firestore().collection(`uploader/${paper.author}/totalDownloads`).doc(downloadId).set(uploaderPaper)
-                                app.firestore().collection(`uploader/${paper.author}/papers/${paper.id}/downloads`).doc(downloadId).set(uploaderPaper)
-
-
-                            }
-                            if (i >= paperGroup.length - 1) {
-                                Modals.confirm({ title: `Download SuccessFull`, message: `The Download has completed Successfully.\nGo to Downloads` })
-                                    .then(res => {
-                                        if (res.value == true) {
-                                            history.push(`/saved`)
-
-                                        } else {
-
-                                        }
-                                    })
-                            }
-
-                        }).catch((err) => {
-                            Modals.alert({ message: `${err.message}`, title: `Upload Error`, buttonTitle: `ok` })
-                        }).finally(() => {
-                            setuploading(false)
-                        })
-                } else {
-                    const res = (await Modals.confirm({ title: `Authentication Error`, message: `unable to buy papers because user is not authenticated`, okButtonTitle: `login` })).value
-                    if (res) {
-                        history.push(`/login`)
-                    }
-
-                }
-            }
-            console.log(tempObject)
-        }
-
+      
         return (
             <>
             pending
@@ -204,3 +109,104 @@ export function formUrlEncoder(params: any, formUrlBody: any) {
             //     headers:{}
 
             // })
+
+
+
+
+
+            // function verifyPayment() {
+            //     setverifyPopOver(true)
+            //     const data: any = {
+            //         "ref": `${paperGroup[0].ref}`,
+            //         "reciever": `akumah`
+            //     }
+    
+            //     setpaymentStatus(`pending`)
+    
+            //     const url = 'https://quesers.herokuapp.com/zito-pay';
+            //     const params = {
+            //         ...data
+            //     };
+            //     const headers = new Headers({
+            //         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            //     });
+    
+            //     let formUrlBody: any = [];
+            //     formUrlBody = formUrlEncoder(params, formUrlBody);
+    
+            //     fetch(url, {
+            //         method: 'POST',
+            //         headers: headers,
+            //         body: formUrlBody
+            //     }).then(async response => {
+            //         const data: any = (await response.json())
+            //         console.log(data)
+            //         if (data.status == 1 && data.status_msg == "COMPLETED") {
+            //             setpaymentStatus(true)
+            //         } else {
+            //             setpaymentStatus(false)
+            //         }
+            //     }).catch((err) => {
+            //         setpaymentStatus(false)
+            //         console.log(err)
+            //     });
+            // }
+    
+    
+            // async function savePapersToDatabase() {
+            //     let tempObject: any = {}
+    
+            //     for (let i = 0; i < paperGroup.length; i++) {
+            //         const paper = paperGroup[i]
+            //         tempObject[`${paper.id}`] = paper
+            //         setuploading(true)
+    
+            //         if (userInfo) {
+            //             app.firestore()
+            //                 .collection(`userInfos`)
+            //                 .doc(userInfo.tel)
+            //                 .collection(`papers`)
+            //                 .doc(`${paper.id}`)
+            //                 .set(tempObject).then(async () => {
+            //                     for (let i = 0; i < paperGroup.length; i++) {
+            //                         const paper = paperGroup[i]
+            //                         const newdownloads = parseInt(`${paper.downloads}`) != NaN ? parseInt(`${paper.downloads}`) + 1 : paper.downloads
+            //                         app.database().ref(`allPapers`).child(paper.id).update({ downloads: newdownloads.toString() }).catch(alert)
+    
+            //                         //updating firestore uploaders downloads
+            //                         const m = (new Date(Date.now())).getMonth(), y = (new Date(Date.now())).getFullYear();
+            //                         const downloadId = paper.author + `` + Date.now()
+            //                         const uploaderPaper: UploadersTotalDownloads = { cost: paper.cost, currency: paper.currency, date: `${Date.now()}`, month: `${Months[m]}`, tel: paper.author, year: y.toString() }
+            //                         app.firestore().collection(`uploader/${paper.author}/totalDownloads`).doc(downloadId).set(uploaderPaper)
+            //                         app.firestore().collection(`uploader/${paper.author}/papers/${paper.id}/downloads`).doc(downloadId).set(uploaderPaper)
+    
+    
+            //                     }
+            //                     if (i >= paperGroup.length - 1) {
+            //                         Modals.confirm({ title: `Download SuccessFull`, message: `The Download has completed Successfully.\nGo to Downloads` })
+            //                             .then(res => {
+            //                                 if (res.value == true) {
+            //                                     history.push(`/saved`)
+    
+            //                                 } else {
+    
+            //                                 }
+            //                             })
+            //                     }
+    
+            //                 }).catch((err) => {
+            //                     Modals.alert({ message: `${err.message}`, title: `Upload Error`, buttonTitle: `ok` })
+            //                 }).finally(() => {
+            //                     setuploading(false)
+            //                 })
+            //         } else {
+            //             const res = (await Modals.confirm({ title: `Authentication Error`, message: `unable to buy papers because user is not authenticated`, okButtonTitle: `login` })).value
+            //             if (res) {
+            //                 history.push(`/login`)
+            //             }
+    
+            //         }
+            //     }
+            //     console.log(tempObject)
+            // }
+    
