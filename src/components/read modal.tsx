@@ -7,6 +7,7 @@ import "./style/readmodal.css";
 import { Plugins } from "@capacitor/core";
 import { BounceStar } from "../data/animations";
 import ReviewPopover from "./review popover";
+import { urlToBase64 } from "../data/urlToBase64";
  
  
 const { Storage, Share } = Plugins
@@ -125,8 +126,8 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
                    
                         <IonList    >
                        
-                            {thisPaper?.questionUrl?.map((img, index) => {
-                                return  <IonImg key={index} src={img} />
+                            {thisPaper?.questionUrl?.map((url, index) => {
+                                return  <PaperImage key={index} url={url}></PaperImage>
                                 
                             })}
                            
@@ -136,8 +137,8 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
                    
                     <IonSlide >
                         <IonList>
-                            {thisPaper?.answerUrl?.map((img, index) => {
-                                return <IonImg key={index} src={img} />
+                            {thisPaper?.answerUrl?.map((url, index) => {
+                                return <PaperImage key={index} url={url} />
                             })}
                         </IonList>
                     </IonSlide>
@@ -171,4 +172,27 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
 
 export default ReadModal
 
- 
+const PaperImage: React.FC <{url:string}>=({url})=>{
+    const [img, setimg]=useState(``)
+
+    useEffect(()=>{
+         async function initImg(){
+            const str = (await Storage.get({key:url})).value
+            
+            if(str){
+                setimg(str)
+            }
+           else{
+               urlToBase64(url,(newVal)=>{
+                   Storage.set({key:url,value:newVal})
+               })
+           }
+         }
+         initImg()
+    },[url])
+    return(
+        <IonImg  src={img} />
+    )
+}
+
+
