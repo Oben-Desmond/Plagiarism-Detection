@@ -14,4 +14,11 @@
 .loading>div{
     text-align: center;
     padding: 20px;
+    margin-bottom: 15px;
+}
+.from-finie{
+    position: absolute;
+    bottom: 20px;
+   width: 100%;
+    text-align: center;
 }

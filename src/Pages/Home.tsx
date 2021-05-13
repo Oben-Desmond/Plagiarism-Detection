@@ -12,10 +12,11 @@ import { searchArrowSeeker } from "../data/animations";
 import { useHistory } from "react-router";
 import { removeOccurence } from "./Saved";
 
-const { Storage, Modals } = Plugins
+const { Storage, Keyboard, App, Modals } = Plugins
+
 
 const Home: React.FC = () => {
-  let initobj = { downloads: 70, previewUrl: ``, title: `Past Questions`, id: `ajsdua`, description: `Lorem ipsum dolor sit amet consectetur adipisicing elit.` }
+
   const [play, setplay] = useState(false)
   const [papers, setpapers] = useState<SearchPaperInterface[]>([])
   const [addedPapers, setaddedPapers] = useState<SearchPaperInterface[]>([])
@@ -31,32 +32,43 @@ const Home: React.FC = () => {
   const [currentUser, setcurrentUser] = useState<userInterface>()
   const [logout, setlogout] = useState(false)
 
-  const { Storage, Keyboard, App } = Plugins
+  //navigation history to allow programatic routing
   const history = useHistory()
   useEffect(() => {
 
-
+    // event listener to listen to keyboard event and search paper when enter key is pressed
     document.addEventListener(`keyup`, (event) => {
-      if (event.key == `Enter`) {
+      if (event.key === `Enter`) {
         SearchPaper()
         Keyboard.hide().catch(console.log)
       }
     })
+    /**
+     * initializelocal papers obtains all papers saved by the user locally
+     */
     initializeLocalPapers()
+    /**
+     * initialize user obtains user data stored in local storage
+     */
     intializeUser()
-    //  alert(JSON.stringify(app.auth().))
 
   }, [])
 
+  //modifies searchBlurred to false state when the user clicks on the search bar
   function focusSearch() {
     setsearchBlurred(false)
 
   }
+
+  //modifies searchBlurred to true state when the user clicks on the search bar
+
   function blurSearch() {
     setsearchBlurred(true)
     // setdisplayTitle(true)
 
   }
+
+  //function defination for obtaining saved papers stored in local storage
   async function initializeLocalPapers() {
     const paperVALUE = (await Storage.get({ key: `savedPapers` })).value
     if (paperVALUE) {
@@ -66,36 +78,52 @@ const Home: React.FC = () => {
     }
   }
 
+
+  //function defination for searching a paper from the database
   function SearchPaper() {
     console.log(`searching`)
-
     let searchtext = searchBarRef.current?.value
     let searchResult: string[] = []
+
+    //verifies if the is a text in the search bar
     if (searchtext) {
-      setsearching(true)
+      setsearching(true) //this will allow the progress bar to start animating
 
+      //removeOccurences purifies the string to remove unwante symbols from quesry string
+      // split converts it to an array
+      let searchTextArray = removeOccurence(searchtext, [`.`, `$`, `#`, `[`, `]`, `-`, `+`, `*`]).toLowerCase().trim().split(` `)
 
-      let searchTextArray = removeOccurence(searchtext, [`.`, `$`, `#`, `[`, `]`, `-`, `+`, `*`]).toLowerCase().split(` `)
 
       let len = searchTextArray.length
       for (let i = 0; i < len; i++) {
         let word = searchTextArray[i]
+
+        //function fetches each word from database ref an find all papers that match
         app.database().ref(`index`)
           .child(word)
           .once('value', snapshot => {
+
+            //obtaining database snapshot 
+            //snapshot contains objects that carring reference to papers that match the words
+            //objects are key value pairs
+
             let value = snapshot.val()
             if (value) {
+              //value gotten is pushed to searchResult array
               searchResult.push(value)
             }
             else {
               setsearching(false)
               setpapers([])
             }
-            if (len == i + 1) {
+            if (len === i + 1) {
               RankKeys(searchResult)
-
+              //at the end of the queries the RankKeys method is called rank the search results in other of importance
             }
           }, (err) => {
+
+            //login out an error incase there is one using the alert function
+            //stoping all search animations
             alert(err.message)
             setsearching(false)
           })
@@ -105,10 +133,12 @@ const Home: React.FC = () => {
 
   }
 
+  //Rank keys methods ranks search result according to importance
   function RankKeys(keyArray: string[]) {
     let ResultsObject: any = {}
     console.log(keyArray)
 
+    //terminates ranking process if there are no items to rank
     if (keyArray.length == 0) {
       setnosearch(false)
       setsearching(false)
@@ -117,10 +147,21 @@ const Home: React.FC = () => {
 
     }
 
+    /**
+     * keyarray object is of the form
+     *                word1                  ,             word2
+     *         [   {key:value, key2: value2},    {key3:value3, key4:value4}   ]
+     */
     for (let i = 0; i < keyArray.length; i++) {
+
+      //matchesArray is assigned and an array containing the values of the  keyArray objects at each iteration
       let matchesArray = Object.values(keyArray[i])
+
+      //for loop iterates over each internal array
       for (let j = 0; j < matchesArray.length; j++) {
-        if (ResultsObject[matchesArray[j]] != undefined) {
+
+        //for each key value per is mapped to an array depending on the number of times it occurs
+        if (ResultsObject[matchesArray[j]] !== undefined) {
           ResultsObject[matchesArray[j]] += 1
         }
         else {
@@ -129,24 +170,31 @@ const Home: React.FC = () => {
       }
     }
 
+    //once the new ranked array (ResuktsObject) contains all keys with their corresponding frequency,
+    //the object is mapped to an array (sortedResults) wich is sorted to allow those with higher frequenies to appear first
     let sortedResults = Object.keys(ResultsObject)
       .sort(function (a, b) { return ResultsObject[a] - ResultsObject[b] }).reverse()
     let fetchedPapers: SearchPaperInterface[] = []
 
+    //inorder to get the top 20 results, the others are ignored
     for (let i = 0; i < sortedResults.length; i++) {
       if (sortedResults.length > 20) {
         break;
       }
+      //the results of the sorted array are used to fetch papers for the jkeys provided
       app.database().ref(`allPapers`).child(sortedResults[i])
         .once(`value`, (snapshot) => {
 
           let value = snapshot.val()
           if (value) {
             //  setdb(JSON.stringify(value))
+
+            //pushes search result into an array that will be mapped to the user
             fetchedPapers.push({ ...value, id: snapshot.key })
-            console.log(value, `value`)
+            console.log(value, `value`);
 
           }
+          //resets all searching states an animations when papers are done seraching
           if (sortedResults.length == i + 1) {
             setpapers([])
             setnosearch(false)
@@ -165,38 +213,41 @@ const Home: React.FC = () => {
 
   }
 
-
+  //initializes local papers everytime papers are added or removed from the cart
   useEffect(() => {
 
     setbadgeNum(addedPapers.length)
     initializeLocalPapers()
 
-
   }, [addedPapers])
 
   useEffect(() => {
+    //establishes whether or not there are papers on startup
     if (papers.length > 0) {
       setnoResults(false)
     }
   }, [papers])
 
+  //adds papers to cart
   function addQuestionToCart(paper: SearchPaperInterface) {
     setaddedPapers([...addedPapers, paper])
   }
+
+
+  //removes papers from cart
   function removePaperFromAdded(paperIndex: number) {
-    let temp = addedPapers
     addedPapers.splice(paperIndex, 1)
     setaddedPapers([...addedPapers])
   }
-  async function switchAccount() {
 
+  //called to Logout user
+  async function switchAccount() {
     const res = (await Modals.confirm({ message: `You are going to logout from  this account - ${currentUser?.name} (${currentUser?.tel})`, title: `Logout`, okButtonTitle: `logout` })).value
     if (res) {
       history.push(`/login`)
-    } else {
-
     }
   }
+
   async function intializeUser() {
     const userVal: string | null = (await Storage.get({ key: `user` })).value
     if (userVal) {
@@ -226,24 +277,13 @@ const Home: React.FC = () => {
 
   })
 
-  const ionRouter = useIonRouter();
-  useEffect(() => {
-    if (Capacitor.isNative) {
 
-      document.addEventListener('ionBackButton', (ev: any) => {
-        ev.detail.register(-1, () => {
-          if (history.location.pathname == `/search` || history.location.pathname == `/login`) {
-            App.exitApp();
-          }
-        });
-      });
-    }
-  }, [])
 
 
   return (
     <IonPage>
-      {/*  Header containing search bar  */}
+      {/*-----------------------  Header containing search bar ------------------------- */}
+
       <IonHeader>
         <IonToolbar color="dark">
           <IonMenuButton slot='start'></IonMenuButton>
@@ -271,21 +311,9 @@ const Home: React.FC = () => {
               <IonIcon icon={arrowForward} />
             </IonFabButton></IonFab>
         </IonToolbar>
-        {/* <IonToolbar color={`dark`}>
-        <IonItem color={`none`}>
-          <IonIcon  size={`small`} slot={`start`} icon={search}></IonIcon>
-          <IonLabel>past GCE questions</IonLabel>
-          </IonItem>
-          <IonItem  color={`none`} >
-          <IonIcon  size={`small`} slot={`start`} icon={search}></IonIcon>
-          <IonLabel>past GCE questions</IonLabel>
-          </IonItem>
-          <IonItem  color={`none`}>
-          <IonIcon size={`small`} slot={`start`} icon={search}></IonIcon>
-          <IonLabel>past GCE questions</IonLabel>
-          </IonItem>
-        </IonToolbar> */}
       </IonHeader>
+
+      {/* --------------------------      progress bar and search indicator       ----------------------------- */}
 
       {
         searching && <IonProgressBar color="success" type={`indeterminate`} ></IonProgressBar>}
@@ -293,6 +321,8 @@ const Home: React.FC = () => {
 
 
       <IonContent className="content-home">
+        {/* --------------------------      animated arrow    ----------------------------- */}
+
         {
           nosearch && <IonFab vertical={`top`} horizontal={`center`}>
             <CreateAnimation easing={`linear`} play={true} iterations={Infinity} duration={1500} keyframes={searchArrowSeeker}>
@@ -300,6 +330,7 @@ const Home: React.FC = () => {
             </CreateAnimation>
           </IonFab>}
 
+        {/* --------------------------     paper cards showing the questions       ----------------------------- */}
 
         {papers.map((paper, index) => {
           let exists = (savedPapersIds.indexOf(paper.id) >= 0) ? true : false
@@ -309,6 +340,8 @@ const Home: React.FC = () => {
 
           )
         })}
+        {/* --------------------------     image svg illustration       ----------------------------- */}
+
         {nosearch && <IonCardContent>
 
           <IonImg style={{ marginTop: `70px` }} src={localImages.quesersSearch}></IonImg>
@@ -337,6 +370,9 @@ const Home: React.FC = () => {
           </IonFabButton>
         </IonFab>
       </CreateAnimation>
+      
+      {/* --------------------------      add to cart modal    ----------------------------- */}
+
       <CheckOutModal user={currentUser} removePaperFromAdded={removePaperFromAdded} CheckOutPapers={addedPapers} isOpen={checkOut} onDidDismiss={() => { setcheckOut(false) }}></CheckOutModal>
     </IonPage>
   );

@@ -185,7 +185,7 @@ const ReadModal: React.FC<{
 
 export default ReadModal
 
-const PaperImage: React.FC<{ url: string }> = ({ url }) => {
+export const PaperImage: React.FC<{ url: string }> = ({ url }) => {
     const [img, setimg] = useState(``)
     const [imgLoaded, setimgLoaded] = useState(false)
     const [show, setshow] = useState(false)

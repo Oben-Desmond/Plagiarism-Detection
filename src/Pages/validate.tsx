@@ -1,31 +1,45 @@
-import { IonContent, IonLabel, IonPage, IonProgressBar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonFooter, IonLabel, IonNote, IonPage, IonProgressBar, IonTitle } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import '../css/Validate.css';
 import app from '../Firebase';
-import { SearchPaperInterface, userInterface } from '../components/componentTypes';
-import { Plugins } from '@capacitor/core';
+import { userInterface } from '../components/componentTypes';
+import { Capacitor, Plugins } from '@capacitor/core';
 import { useHistory } from 'react-router';
 import { UserContext } from '../components/RouterOutlet';
 
-const { Storage,Modals } = Plugins
+const { Storage, Modals, App } = Plugins
 
 const Validate: React.FC = () => {
-    const [loading, setloading] = useState<boolean>(false)
-    const searchBarRef = useRef<HTMLIonSearchbarElement>(null)
-    const {userInfo,setuserInfo} = useContext(UserContext )
+
+
+    const { userInfo, setuserInfo } = useContext(UserContext)
 
     let history = useHistory()
-    let t:any
+    let t: any
     useEffect(() => {
-        
-         if(t){
-             window.clearTimeout(t)
-         }else{
-              t= setTimeout(() => {
-                   init()
-                   window.clearTimeout(t)
-             }, 3000);
-         }
+
+        if (t) {
+            window.clearTimeout(t)
+        } else {
+            t = setTimeout(() => {
+                init()
+                window.clearTimeout(t)
+            }, 3000);
+        }
+    }, [])
+
+    //useeffect adds an event listener to trigger the app to close once the app is on the search page and the back button is pressed
+    useEffect(() => {
+        if (Capacitor.isNative) {
+
+            document.addEventListener('ionBackButton', (ev: any) => {
+                ev.detail.register(-1, () => {
+                    if (history.location.pathname == `/search` || history.location.pathname == `/login`) {
+                        App.exitApp();
+                    }
+                });
+            });
+        }
     }, [])
 
     async function init() {
@@ -33,31 +47,31 @@ const Validate: React.FC = () => {
         if (userVal) {
             let user: userInterface = JSON.parse(userVal)
             if (user && user.tel) {
-                if(user.validate==`pending`){
+                if (user.validate == `pending`) {
                     user = { ...user, validate: true }
-                    app.firestore().collection(`users`).doc(user.tel).set({name:user.name}).then(()=>{
-                        Storage.set({key:`user`,value:JSON.stringify(user)})
+                    app.firestore().collection(`users`).doc(user.tel).set({ name: user.name }).then(() => {
+                        Storage.set({ key: `user`, value: JSON.stringify(user) })
                         setuserInfo(user)
                         history.push(`/search`)
-                    }).catch(()=>{
-                        Modals.alert({title:`Validation Error`,message:`Please try again`}).then(()=>{
-                           history.push(`/login`)
+                    }).catch(() => {
+                        Modals.alert({ title: `Validation Error`, message: `Please try again` }).then(() => {
+                            history.push(`/login`)
                         })
                     })
-                     
+
                 }
-               else if(user.validate==true){
+                else if (user.validate == true) {
                     history.push(`/search`)
-                    const userVal= (await Storage.get({key:`user`})).value
-                    if(userVal){
+                    const userVal = (await Storage.get({ key: `user` })).value
+                    if (userVal) {
                         setuserInfo(JSON.parse(userVal))
                         console.log(JSON.parse(userVal))
                     }
                 }
-                else{
-                    history.push(`/login`) 
+                else {
+                    history.push(`/login`)
                 }
-               
+
             }
             else {
                 history.push(`/login`)
@@ -79,7 +93,13 @@ const Validate: React.FC = () => {
                     </div>
                     <IonProgressBar type={`indeterminate`}></IonProgressBar>
                 </div>
+                
+                    <div className={`from-finie`}>
+                        <IonNote>from findie</IonNote>
+                    </div>
+                 
             </IonContent>
+
         </IonPage>
     );
 };
