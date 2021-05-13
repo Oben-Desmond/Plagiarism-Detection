@@ -22,14 +22,16 @@ const Saved: React.FC = () => {
     const [loadingPapers, setloadingPapers] = useState<boolean>(false)
     const [noPapersSaved, setnoPapersSaved] = useState<boolean>(false)
     const searchBarRef = useRef<HTMLIonSearchbarElement>(null)
-    const [searchBlurred, setsearchBlurred] = useState(true) 
+    const [searchBlurred, setsearchBlurred] = useState(true)
     const [starToast, setstarToast] = useState(``)
     const [startup, setstartup] = useState(true)
 
 
-    const {userInfo,setuserInfo} = useContext(UserContext)
+    const { userInfo, setuserInfo } = useContext(UserContext)
     const history = useHistory()
 
+
+    //use effect initializes locally saved papers
     useEffect(() => {
         setloadingPapers(true)
 
@@ -52,16 +54,23 @@ const Saved: React.FC = () => {
 
 
     }, [])
+
     async function initializeLocalPapers() {
-        const paperVALUE = (await Storage.get({ key: `savedPapers` })).value 
+
+
+        //papers are fetched initially from the local storage an rendered
+        const paperVALUE = (await Storage.get({ key: `savedPapers` })).value
 
         if (paperVALUE) {
             let paper = JSON.parse(paperVALUE)
             setsavedPapers(paper)
         }
+
+
+        // a database request is made to fetch updated content
         if (userInfo?.tel) {
             let user: userInterface = userInfo
-             if (user) {
+            if (user) {
                 app.firestore()
                     .collection(`users`)
                     .doc(user.tel)
@@ -86,6 +95,7 @@ const Saved: React.FC = () => {
                     })
             }
             else {
+                //display an error when user is not found
                 const res = (await Modals.confirm({ title: `Authentication Error`, message: `unable to buy papers because user is not authenticated`, okButtonTitle: `login` })).value
                 if (res) {
                     history.push(`/login`)
@@ -122,7 +132,7 @@ const Saved: React.FC = () => {
             const pendingArr: any[] = Object.values(pendingObj)
             setpendingPapers([...pendingArr])
         }
-       
+
     }
     function handleSearch() {
         let value = removeOccurence(searchBarRef.current?.value?.toLowerCase(), [` `])
@@ -141,7 +151,7 @@ const Saved: React.FC = () => {
 
     async function deleteSavedPaper(paper: savedPaperInterface) {
         const { title, id } = paper
-        const currentUser= userInfo 
+        const currentUser = userInfo
         if (currentUser) {
             const res = (await Modals.confirm({ title: `Delete Paper`, message: `Are you sure you want to Delete ${title}?`, okButtonTitle: `Delete` })).value
             if (!res) {
@@ -226,14 +236,14 @@ const Saved: React.FC = () => {
 
             <IonContent>
                 {loadingPapers && <IonSpinner></IonSpinner>}
-                
+
                 {displaySavedPapers.length <= 0 && <><IonImg style={{ marginTop: `20%`, padding: `20px` }} src={localImages.quesersSave} />
                     <IonCardContent>
                         <IonTitle color='medium'>  No Papers Saved Yet</IonTitle>
                     </IonCardContent>
                 </>
 
-                } 
+                }
                 {
                     displaySavedPapers.map((paper, index) => {
                         const starred = (starredPapersKeys.indexOf(paper.id) >= 0) ? true : false;
