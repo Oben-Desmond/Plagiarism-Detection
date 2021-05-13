@@ -1,8 +1,7 @@
 import { Plugins } from "@capacitor/core";
-import { IonCard, IonItem, IonImg, IonGrid, IonRow, IonCol, IonItemOption, IonItemOptions, IonItemSliding, IonText, IonIcon, IonButton, IonCheckbox, IonCardHeader, IonCardTitle, IonProgressBar, IonToolbar, IonButtons } from "@ionic/react";
-import { close, star, trash } from "ionicons/icons";
+import { IonCard, IonIcon, IonButton, IonCardHeader, IonCardTitle, IonProgressBar, IonToolbar, IonButtons } from "@ionic/react";
+import { close } from "ionicons/icons";
 import React, { useState } from "react";
-import { localImages } from "../img/Images";
 import { savedPaperInterface } from "./componentTypes";
 import ReadModal, { PaperImage } from "./read modal";
 import "./style/starredCard.css";
