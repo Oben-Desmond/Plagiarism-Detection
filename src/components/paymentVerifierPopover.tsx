@@ -1,10 +1,20 @@
-import { IonPopover, IonContent, IonGrid, IonRow, IonCol, IonSpinner, IonCardContent, IonLabel, IonNote, IonIcon, IonButton, IonBackdrop } from "@ionic/react";
+import { IonPopover, IonContent, IonGrid, IonRow, IonCol, IonSpinner, IonCardContent, IonLabel, IonNote, IonIcon, IonButton, IonBackdrop, CreateAnimation } from "@ionic/react";
 import { checkmarkDoneCircleOutline, closeCircleOutline } from "ionicons/icons";
-import React from "react";
+import React, { useState } from "react";
 
 
 const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,paymentStatus:`pending`|boolean, retryTransaction:()=>void}>=({onDidDismiss,isOpen,paymentStatus, retryTransaction})=>{
-
+    const colors = [`dark`, `warning`, `success`, `medium`, `danger`,`primary`]
+    const [colorIndex, setcolorIndex] =useState(colors.length-1)
+    const [animateText, setanimateText] = useState(false)
+    const [showInitialText, setshowInitialText] = useState(true)
+    //animtedly the color of the spinner
+    function animateColors(){
+       setcolorIndex((colorIndex+1)%colors.length)
+       if(colorIndex == colors.length -1){
+          setanimateText(true)
+       }
+    }
 
     return(
         <IonPopover animated onDidDismiss={onDidDismiss} isOpen={isOpen}>
@@ -13,7 +23,7 @@ const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,pa
                 <IonRow>
                     <IonCol></IonCol>
                     <IonCol style={{ textAlign: `center` }}>
-                        <IonSpinner color={`primary`}></IonSpinner>
+                        <IonSpinner onAnimationIteration={animateColors} color={colors[colorIndex]}></IonSpinner>
                     </IonCol>
                     <IonCol></IonCol>
                 </IonRow>
@@ -21,7 +31,17 @@ const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,pa
                     <IonCol style={{ textAlign: `center` }}>
                         <IonCardContent>
                             <IonLabel>Verifying Payment </IonLabel> <br />
+                          {  showInitialText&&<CreateAnimation onFinish={{callback:()=>{setanimateText(false); setshowInitialText(false)}}} fromTo={[{fromValue:`1`,toValue:`0`,property:`opacity`}]} play={animateText} stop={!animateText} duration={300}>
                             <IonNote>please wait a moment...</IonNote>
+                            </CreateAnimation>}
+                            {  !showInitialText&&<CreateAnimation delay={500} onFinish={{callback:()=>{setanimateText(false); setshowInitialText(false)}}} fromTo={[{fromValue:`0`,toValue:`1`,property:`opacity`}]} play={animateText} stop={!animateText} duration={300}>
+                            <IonNote>Thank you for using Quesers</IonNote>
+                            </CreateAnimation>}
+                            <br/>
+                            {  !showInitialText&&<CreateAnimation delay={1000} onFinish={{callback:()=>{setanimateText(false); setshowInitialText(false)}}} fromTo={[{fromValue:`0`,toValue:`1`,property:`opacity`}]} play={animateText} stop={!animateText} duration={300}>
+                            <IonNote color={colors[colorIndex]}>we love you</IonNote>
+                            </CreateAnimation>}
+                            
                         </IonCardContent>
                     </IonCol>
                 </IonRow>
