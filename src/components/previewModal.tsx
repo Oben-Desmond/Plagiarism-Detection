@@ -3,13 +3,12 @@ import { arrowBack, download } from "ionicons/icons";
 import "../css/previewModal.css";
 import React, { useEffect, useRef, useState } from "react";
 import { SearchPaperInterface } from "./componentTypes";
-import { PaperImage } from "./read modal";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { urlToBase64 } from "../data/urlToBase64";
 import { Plugins } from "@capacitor/core";
 import "./style/readmodal.css";
 
-const { Modal, Storage } = Plugins
+const { Storage } = Plugins
 
 const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface, onDidDismiss: () => void, DownloadThisPaper: () => void }> = ({ isOpen, onDidDismiss, DownloadThisPaper, thisPaper }) => {
 
@@ -70,7 +69,7 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
                     <IonSlide >
                         <IonList>
                             {thisPaper?.questionUrl?.map((img, index) => {
-                                if (index == 0) return (
+                                if (index === 0) return (
                                     <React.Fragment key={index}>
                                         <PreviewPaperImage style={{ maxHeight: `35vh`, margin: 0 }}  className="" url={img} alt={thisPaper.description} />
                                         <PreviewPaperImage style={{}}  className="hide" key={index} url={img} alt={thisPaper.description} />
@@ -133,6 +132,7 @@ export const PreviewPaperImage: React.FC<{ url: string, className: string, style
             initImg()
         }
     }, [])
+    
     return (
         <div style={{ textAlign: `center`, minHeight: imgLoaded ? `auto` : `200px` }}>
             {!imgLoaded && <IonSpinner color={`primary`}></IonSpinner>}

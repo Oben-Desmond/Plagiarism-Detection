@@ -1,12 +1,8 @@
-import { IonModal, IonHeader, IonToolbar, IonLabel, IonBadge, IonButtons, IonButton, IonBackdrop, IonIcon, IonContent, IonText, IonSpinner, IonGrid, IonRow, IonCol } from "@ionic/react";
+import { IonModal, IonHeader, IonToolbar, IonLabel, IonBadge, IonButtons, IonButton, IonBackdrop, IonIcon, IonContent } from "@ionic/react";
 import { close } from "ionicons/icons";
-import React, { useEffect, useRef, useState } from "react";
-import CheckoutQuestionCard from "./checkoutQuestionCard";
-import { localPendingPapers, SearchPaperInterface, userInterface } from "./componentTypes";
+import React, { useRef } from "react";
 import "./style/checkoutModal.css";
-import { Plugins } from "@capacitor/core";
 import "../zitopay";
-import { getLocalStorageStatus, LocalStorageSetLoadedStatus } from "../data/LocalStorageSetLoadedStatus";
 
 
 const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: boolean, reference: string }> = ({ onDidDismiss, isOpen, cost, reference }) => {
@@ -40,7 +36,7 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
                             <IonCol></IonCol>
                         </IonRow>
                     </IonGrid> */}
-                    
+
                     {/* -------------------        hidden button to initiate zito pay Iframe            --------------- */}
                     <IonToolbar style={{ minHeight: `80vh` }} color={`medium`}>
                         <div style={{ position: `relative` }} id="zitopayDiv"></div>

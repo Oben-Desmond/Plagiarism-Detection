@@ -11,7 +11,7 @@ const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,pa
     //animtedly the color of the spinner
     function animateColors(){
        setcolorIndex((colorIndex+1)%colors.length)
-       if(colorIndex == colors.length -1){
+       if(colorIndex === colors.length -1){
           setanimateText(true)
        }
     }
@@ -19,7 +19,7 @@ const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,pa
     return(
         <IonPopover animated onDidDismiss={onDidDismiss} isOpen={isOpen}>
         <IonContent>
-            {paymentStatus == `pending` && <IonGrid>
+            {paymentStatus === `pending` && <IonGrid>
                 <IonRow>
                     <IonCol></IonCol>
                     <IonCol style={{ textAlign: `center` }}>
@@ -46,7 +46,7 @@ const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,pa
                     </IonCol>
                 </IonRow>
             </IonGrid>}
-            {paymentStatus == true && <IonGrid>
+            {paymentStatus === true && <IonGrid>
                 <IonRow>
                     <IonCol style={{ textAlign: `center` }}>
                         <IonCardContent>
@@ -62,7 +62,7 @@ const PaymentVerifierPopover:React.FC<{onDidDismiss:() =>void, isOpen:boolean,pa
                     </IonCol>
                 </IonRow>
             </IonGrid>}
-            {paymentStatus == false && <IonGrid>
+            {paymentStatus === false && <IonGrid>
                 <IonRow>
                     <IonCol style={{ textAlign: `center` }}>
                         <IonCardContent>

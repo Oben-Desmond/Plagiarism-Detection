@@ -1,17 +1,12 @@
-import { Plugins } from "@capacitor/core";
-import { IonButton, IonLabel, IonNote } from "@ionic/react";
-import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { getLocalStorageStatus, LocalStorageSetLoadedStatus } from "../data/LocalStorageSetLoadedStatus";
-import { localPendingPapers, SearchPaperInterface } from "./componentTypes";
+import { IonButton, IonLabel } from "@ionic/react";
+import React, { useEffect, useState } from "react";
+import { getLocalStorageStatus } from "../data/LocalStorageSetLoadedStatus";
+import { SearchPaperInterface } from "./componentTypes";
 import PaymentModal from "./payment modal";
 import PaymentVerifierPopover from "./paymentVerifierPopover";
 import { formUrlEncoder } from "./pendingPapersSaved";
-import { UserContext } from "./RouterOutlet";
 
 
-const { Storage } = Plugins
-const Months = [`January`, `Febuary`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `December`]
 
 const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum: string ,validateSavedPapers:()=>void}> = ({ CheckOutPapers, costSum ,validateSavedPapers}) => {
 
@@ -20,10 +15,9 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
     const [reference, setreference] = useState(Math.floor(Math.random() * 1000) + `` + Date.now())
     const [paymentStatus, setpaymentStatus] = useState<boolean | `pending`>(false);
     const [verifyPayment, setverifyPayment] = useState<boolean>(false);
-    const [verifyPopOver, setverifyPopOver] = useState<true | false>(false);
-    const [uploading, setuploading] = useState<true | false>(false);
+    const [uploading,  ] = useState<true | false>(false);
 
-    const { setuserInfo, userInfo } = useContext(UserContext)
+    // const { setuserInfo, userInfo } = useContext(UserContext)
 
     useEffect(() => {
         //generates a unique refrence for Zitopay 
@@ -31,30 +25,29 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
     }, [CheckOutPapers])
 
     //saves transactions which are pending and yet to be confirmed
-    async function savePapersToStorage() {
+    // async function savePapersToStorage() {
 
-        const temp = (await Storage.get({ key: `pending` })).value
-        let pending: localPendingPapers[] = []
-        if (temp) {
-            pending = JSON.parse(temp)
-        }
+    //     const temp = (await Storage.get({ key: `pending` })).value
+    //     let pending: localPendingPapers[] = []
+    //     if (temp) {
+    //         pending = JSON.parse(temp)
+    //     }
 
-        const arrayGroup = [...CheckOutPapers.map((info) => ({ ...info, reference }))]
-        pending = { ...pending, [reference]: arrayGroup }
+    //     const arrayGroup = [...CheckOutPapers.map((info) => ({ ...info, reference }))]
+    //     pending = { ...pending, [reference]: arrayGroup }
 
-        const value = JSON.stringify(pending)
-        Storage.set({ key: `pending`, value }).catch(alert)
+    //     const value = JSON.stringify(pending)
+    //     Storage.set({ key: `pending`, value }).catch(alert)
 
 
-        for (let i = 0; i < CheckOutPapers.length; i++) {
-            // removePaperFromAdded(i);
-        }
+    //     for (let i = 0; i < CheckOutPapers.length; i++) {
+    //         // removePaperFromAdded(i);
+    //     }
 
-    }
+    // }
 
     //verifies if a transaction with a speific ref has been confirmed
     function verifyPaymentSuccess() {
-        setverifyPopOver(true)
         
         //get request payload is initialized
         const data: any = {
@@ -108,7 +101,7 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
     //action executed when the payment modal is closed 
     async function onPaymentModalDismissed() {
         const status = await getLocalStorageStatus()
-        if (status && status == `true`) {
+        if (status && status === `true`) {
             //payment is verified once the modal is closed
             verifyPaymentSuccess()
         }

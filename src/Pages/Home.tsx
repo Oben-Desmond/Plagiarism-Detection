@@ -1,18 +1,18 @@
-import { CreateAnimation, IonBadge, IonCardContent, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonImg, IonMenuButton, IonPage, IonProgressBar, IonSearchbar, IonText, IonTitle, IonToolbar, useIonRouter, useIonViewDidEnter } from "@ionic/react";
+import { CreateAnimation, IonBadge, IonCardContent, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonImg, IonMenuButton, IonPage, IonProgressBar, IonSearchbar, IonText, IonTitle, IonToolbar, useIonViewDidEnter } from "@ionic/react";
 import { arrowForward, arrowUp, cart } from "ionicons/icons";
 import React, { useEffect, useRef, useState } from "react";
 import QuestionCard from "../components/queserCard";
 import { savedPaperInterface, SearchPaperInterface, userInterface } from "../components/componentTypes";
 import app from '../Firebase';
 import { localImages } from "../img/Images";
-import { Capacitor, Plugins } from "@capacitor/core";
+import { Plugins } from "@capacitor/core";
 import NetworkIndicator from "../components/network indicator";
 import CheckOutModal from "../components/checkout modal";
 import { searchArrowSeeker } from "../data/animations";
 import { useHistory } from "react-router";
 import { removeOccurence } from "./Saved";
 
-const { Storage, Keyboard, App, Modals } = Plugins
+const { Storage, Keyboard, Modals } = Plugins
 
 
 const Home: React.FC = () => {
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   const [play, setplay] = useState(false)
   const [papers, setpapers] = useState<SearchPaperInterface[]>([])
   const [addedPapers, setaddedPapers] = useState<SearchPaperInterface[]>([])
-  const [savedPapers, setsavedPapers] = useState<savedPaperInterface[]>([])
+  const [, setsavedPapers] = useState<savedPaperInterface[]>([])
   const [savedPapersIds, setsavedPapersIds] = useState<string[]>([])
   const [searching, setsearching] = useState<boolean>(false)
   const searchBarRef = useRef<HTMLIonSearchbarElement>(null)
@@ -139,7 +139,7 @@ const Home: React.FC = () => {
     console.log(keyArray)
 
     //terminates ranking process if there are no items to rank
-    if (keyArray.length == 0) {
+    if (keyArray.length === 0) {
       setnosearch(false)
       setsearching(false)
       setnoResults(true)
@@ -195,14 +195,14 @@ const Home: React.FC = () => {
 
           }
           //resets all searching states an animations when papers are done seraching
-          if (sortedResults.length == i + 1) {
+          if (sortedResults.length === i + 1) {
             setpapers([])
             setnosearch(false)
             setsearching(false)
             setpapers([...fetchedPapers])
             console.log(papers)
 
-            if (fetchedPapers.length == 0) {
+            if (fetchedPapers.length === 0) {
               setnoResults(true)
             }
           }
@@ -252,7 +252,7 @@ const Home: React.FC = () => {
     const userVal: string | null = (await Storage.get({ key: `user` })).value
     if (userVal) {
       const user: userInterface = JSON.parse(userVal)
-      if (user.validate == true) {
+      if (user.validate === true) {
         setcurrentUser(user)
       }
       else {
@@ -363,14 +363,14 @@ const Home: React.FC = () => {
         { offset: 0.7, transform: `scale(1.2) rotate(-0deg) translate(-120px, 0)`, },
         { offset: 1, transform: `scale(1) rotate(0deg) translate(0px, 0px)`, },
       ]} stop={!play} play={play} duration={800}  >
-        <IonFab style={{ transform: badgeNum == 0 ? `scale(0)` : `scale(1)` }} vertical="bottom" horizontal="end">
+        <IonFab style={{ transform: badgeNum ===0 ? `scale(0)` : `scale(1)` }} vertical="bottom" horizontal="end">
           <IonFabButton onClick={() => setcheckOut(true)} color="success">
             <IonIcon icon={cart} />
             <IonBadge color="dark" mode="ios" >{badgeNum}</IonBadge>
           </IonFabButton>
         </IonFab>
       </CreateAnimation>
-      
+
       {/* --------------------------      add to cart modal    ----------------------------- */}
 
       <CheckOutModal user={currentUser} removePaperFromAdded={removePaperFromAdded} CheckOutPapers={addedPapers} isOpen={checkOut} onDidDismiss={() => { setcheckOut(false) }}></CheckOutModal>
