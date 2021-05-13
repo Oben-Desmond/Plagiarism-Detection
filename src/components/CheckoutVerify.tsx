@@ -26,9 +26,11 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
     const { setuserInfo, userInfo } = useContext(UserContext)
 
     useEffect(() => {
+        //generates a unique refrence for Zitopay 
         setreference(Math.floor(Math.random() * 1000) + `` + Date.now())
     }, [CheckOutPapers])
 
+    //saves transactions which are pending and yet to be confirmed
     async function savePapersToStorage() {
 
         const temp = (await Storage.get({ key: `pending` })).value
@@ -49,8 +51,12 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         }
 
     }
+
+    //verifies if a transaction with a speific ref has been confirmed
     function verifyPaymentSuccess() {
         setverifyPopOver(true)
+        
+        //get request payload is initialized
         const data: any = {
             "ref": `${reference}`,
             "reciever": `akumah`
@@ -70,6 +76,9 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         let formUrlBody: any = [];
         formUrlBody = formUrlEncoder(params, formUrlBody);
 
+
+// fetch is made to Zito pay inorder to proces transaction status
+
         fetch(url, {
             method: 'POST',
             headers: headers,
@@ -77,6 +86,8 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         }).then(async response => {
             const data: any = (await response.json())
             console.log(data)
+
+            //on transaction complete payment states are set that will allow user to access papers saved
             if (data.status == 1 && data.status_msg == "COMPLETED") {
                 validateSavedPapers();
                 setuploading(true)
@@ -93,6 +104,8 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         });
     }
 
+
+    //action executed when the payment modal is closed
     async function onPaymentModalDismissed() {
         const status = await getLocalStorageStatus()
         if (status && status == `true`) {
@@ -104,10 +117,16 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
     }
     return (
         <React.Fragment>
+            {/* -----------    button to initialize payment --------- */}
             <div style={{ textAlign: `center`, padding: `6px` }}>
              {  !uploading&& <IonButton onClick={() => setinitializePayment(true)} color={`dark`}> <IonLabel color={`primary`}>Download</IonLabel></IonButton>}
             </div>
+
+            {/* ----------- popover for verifying payments -------- */}
             <PaymentVerifierPopover retryTransaction={() => verifyPaymentSuccess()} isOpen={verifyPayment} onDidDismiss={() => setverifyPayment(false)} paymentStatus={paymentStatus} />
+          
+          
+           {/* ------------  Payment modal with Zito Iframe----------------- */}
             <PaymentModal reference={reference} cost={costSum} isOpen={initializePayment}
                 onDidDismiss={onPaymentModalDismissed}></PaymentModal>
 
