@@ -1,4 +1,4 @@
-import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButton, IonList, IonFooter, IonFab, IonActionSheet, CreateAnimation } from "@ionic/react";
+import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButton, IonList, IonFooter, IonFab, IonActionSheet, CreateAnimation, IonSpinner, IonTitle, IonItem } from "@ionic/react";
 import { chatbox, close, ellipsisVertical, shareSocial, star } from "ionicons/icons";
 import "../css/previewModal.css";
 import React, { useEffect, useRef, useState } from "react";
@@ -8,20 +8,23 @@ import { Plugins } from "@capacitor/core";
 import { BounceStar } from "../data/animations";
 import ReviewPopover from "./review popover";
 import { urlToBase64 } from "../data/urlToBase64";
- 
- 
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+
+
 const { Storage, Share } = Plugins
 
-const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
-    thisPaper: savedPaperInterface}> = ({ isOpen, onDidDismiss, thisPaper }) => {
- 
-   
+const ReadModal: React.FC<{
+    isOpen: boolean, onDidDismiss: () => void
+    thisPaper: savedPaperInterface
+}> = ({ isOpen, onDidDismiss, thisPaper }) => {
+
+
     const slider = useRef<HTMLIonSlidesElement>(null);
     const [value, setValue] = useState("0");
     const [starred, setstarred] = useState(false);
     const [viewPop, setviewPop] = useState(false);
     const [viewReview, setviewReview] = useState(false);
-   
+
     const slideOpts = {
         initialSlide: 0,
         speed: 400,
@@ -32,12 +35,12 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
 
     };
 
-    useEffect(()=>{
+    useEffect(() => {
 
-    return(()=>{
-        setValue(`0`)
-    })
-    },[])
+        return (() => {
+            setValue(`0`)
+        })
+    }, [])
 
     const handleSegmentChange = (e: any) => {
         setValue(e.detail.value);
@@ -49,7 +52,7 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
         await event.target.getActiveIndex().then((value: any) => (index = value));
         setValue('' + index)
     }
-    
+
     function readfunc() {
         Plugins.Accessibility.speak({ value: thisPaper.title + ` \n find the square are of a square with sides 6 centimeters` })
     }
@@ -94,7 +97,7 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
     return (
         <IonModal
             isOpen={isOpen}
-            onDidDismiss={ onDidDismiss }  >
+            onDidDismiss={onDidDismiss}  >
             <IonHeader>
                 <IonToolbar color='dark'>
                     <IonButton fill={`clear`} slot={`start`}>
@@ -116,34 +119,44 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
 
                 </IonToolbar>
             </IonHeader>
-            
+
             <IonContent>
                 <ReviewPopover thisPaper={thisPaper} isOpen={viewReview} onDidDismiss={() => { setviewReview(false) }}></ReviewPopover>
-               
-                <IonSlides  options={slideOpts} onIonSlideDidChange={(e) => handleSlideChange(e)} ref={slider} className={`paper-slides`}>
-               
-                    <IonSlide  >
-                   
+
+
+
+                <IonSlides options={slideOpts} onIonSlideDidChange={(e) => handleSlideChange(e)} ref={slider} className={`paper-slides`}>
+
+                    <IonSlide>
+
                         <IonList    >
-                       
+
                             {thisPaper?.questionUrl?.map((url, index) => {
-                                return  <PaperImage key={index} url={url}></PaperImage>
-                                
+                                return <PaperImage key={index} url={url}></PaperImage>
+
                             })}
-                           
+
                         </IonList>
-                       
+
+
                     </IonSlide>
-                   
+
                     <IonSlide >
+
                         <IonList>
                             {thisPaper?.answerUrl?.map((url, index) => {
                                 return <PaperImage key={index} url={url} />
                             })}
                         </IonList>
+
+
                     </IonSlide>
+
                 </IonSlides>
-               
+
+
+
+
             </IonContent>
 
             <IonFab horizontal={`center`} vertical={`center`}>
@@ -172,26 +185,56 @@ const ReadModal: React.FC<{isOpen: boolean, onDidDismiss: () => void
 
 export default ReadModal
 
-const PaperImage: React.FC <{url:string}>=({url})=>{
-    const [img, setimg]=useState(``)
+const PaperImage: React.FC<{ url: string }> = ({ url }) => {
+    const [img, setimg] = useState(``)
+    const [imgLoaded, setimgLoaded] = useState(false)
+    const [show, setshow] = useState(false)
+    useEffect(() => {
 
-    useEffect(()=>{
-         async function initImg(){
-            const str = (await Storage.get({key:url})).value
-            
-            if(str){
-                setimg(str)
+        async function initImg() {
+            try {
+                const str = (await Storage.get({ key: url })).value;
+
+                if (str) {
+                    setimg(str);
+                    console.log(`img stored`);
+                    return;
+                }
+                else {
+                    urlToBase64(url, (newVal) => {
+                        Storage.set({ key: url, value: newVal });
+                        setimg(url);
+                    })
+                }
             }
-           else{
-               urlToBase64(url,(newVal)=>{
-                   Storage.set({key:url,value:newVal})
-               })
-           }
-         }
-         initImg()
-    },[url])
-    return(
-        <IonImg  src={img} />
+            catch (err) {
+                console.log(err)
+            }
+
+        }
+        if (url) {
+            initImg()
+        }
+    }, [])
+    return (
+        <div style={{ textAlign: `center`, minHeight: imgLoaded ? `auto` : `200px` }}>
+            {!imgLoaded && <IonSpinner color={`primary`}></IonSpinner>}
+            <IonImg onClick={() => setshow(true)} onIonImgDidLoad={() => setimgLoaded(true)} src={img} />
+            <IonModal swipeToClose={true} mode={`ios`} onDidDismiss={() => setshow(false)} cssClass={`zoom-img`} isOpen={show}>
+                <IonHeader>
+                    <IonSlide style={{height:`100vh`}}>
+
+                        <TransformWrapper defaultScale={1.1} options={{limitToBounds:false}} >
+                            <TransformComponent>
+
+                                <IonImg  style={{height:`100vh`}} src={img}></IonImg>
+
+                            </TransformComponent>
+                        </TransformWrapper>
+                    </IonSlide>
+                </IonHeader>
+            </IonModal>
+        </div>
     )
 }
 

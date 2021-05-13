@@ -26,3 +26,10 @@ ion-segment.reader-controller ion-segment-button ion-label{
   height: 100vh;
   overflow-y:scroll; 
 }
+
+.zoom-img{
+    --background:rgba(0,0,0,0.42)
+}
+.zoom-img ion-item{
+    --ion-background-color:rgba(0,0,0,0.72)
+}

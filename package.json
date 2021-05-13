@@ -23,6 +23,7 @@
     "react-firebaseui": "^4.1.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-zoom-pan-pinch": "^1.6.1",
     "typescript": "^4.1.3",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.4",

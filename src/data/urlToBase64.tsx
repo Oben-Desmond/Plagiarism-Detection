@@ -1,12 +1,13 @@
 import { Plugins } from "@capacitor/core";
 
-const { Storage } = Plugins
+ 
 export function urlToBase64(url: string, CallBack: (newVal: string) => void) {
 
     fetch(url).then(async (res) => {
-        const blob = await res.blob()
+        const blob = await res.blob();
 
-        const fr = new FileReader()
+        const fr = new FileReader();
+
         fr.onload = () => {
             console.log(fr.result)
             const text = fr.result + ``
@@ -18,7 +19,7 @@ export function urlToBase64(url: string, CallBack: (newVal: string) => void) {
             }
         }
 
-        fr.readAsDataURL(blob)
+        fr.readAsDataURL(blob);
 
         //  if(text){
         //      CallBack(text)

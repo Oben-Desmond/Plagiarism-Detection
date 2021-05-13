@@ -1,5 +1,5 @@
-import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonChip, IonIcon, IonTitle, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButtons, IonButton, IonItem, IonList } from "@ionic/react";
-import { arrowBack, arrowBackCircle, download } from "ionicons/icons";
+import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButtons, IonButton, IonList } from "@ionic/react";
+import { arrowBack, download } from "ionicons/icons";
 import "../css/previewModal.css";
 import React, { useRef, useState } from "react";
 import { SearchPaperInterface } from "./componentTypes";
@@ -7,11 +7,7 @@ import { SearchPaperInterface } from "./componentTypes";
 
 const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface, onDidDismiss: () => void, DownloadThisPaper: () => void }> = ({ isOpen, onDidDismiss, DownloadThisPaper, thisPaper }) => {
 
-    const [searchText, setSearchText] = useState('');
-
-    // a ref variable to handle the current slider
-    const slider = useRef<HTMLIonSlidesElement>(null);
-    // a state value to bind segment value
+     const slider = useRef<HTMLIonSlidesElement>(null);
     const [value, setValue] = useState("0");
 
     const slideOpts = {
@@ -36,6 +32,7 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
         await event.target.getActiveIndex().then((value: any) => (index = value));
         setValue('' + index)
     }
+    //function calls props to handle ad paper to cart
     function DownloadPaper() {
         DownloadThisPaper()
     }
@@ -53,7 +50,7 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
                             <IonIcon size='large' color="success" icon={arrowBack} ></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    <IonLabel  >Physics for Engineering CA 2018</IonLabel>
+                    <IonLabel  >{thisPaper.title}</IonLabel>
                 </IonToolbar>
             </IonHeader>
             <IonSegment onIonChange={handleSegmentChange} value={value}>
@@ -62,7 +59,7 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
             </IonSegment>
             <IonContent>
 
-
+                 {/* ------------          slides that contain preview Questions and Answers           ------------------- */}
                 <IonSlides options={slideOpts} onIonSlideDidChange={(e) => handleSlideChange(e)} ref={slider} className={`preview-slides`}>
                     <IonSlide >
                         <IonList>
@@ -70,9 +67,9 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
                             {thisPaper?.questionUrl?.map((img, index) => {
                                 if (index == 0) return (
                                     <>
-                                    <IonImg  style={{maxHeight:`35vh`,margin:0}}  key={index} src={img} alt={thisPaper.description} />
-                                    <IonImg style={{margin:`0px`,padding:0}} className={`hide`}  key={index} src={img} alt={thisPaper.description} />
-                                  </>  )
+                                        <IonImg style={{ maxHeight: `35vh`, margin: 0 }} key={index} src={img} alt={thisPaper.description} />
+                                        <IonImg style={{ margin: `0px`, padding: 0 }} className={`hide`} key={index} src={img} alt={thisPaper.description} />
+                                    </>)
                                 return <IonImg className={`hide`} key={index} src={img} />
 
                             })}
@@ -91,6 +88,8 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
                     </IonSlide>
                 </IonSlides>
             </IonContent>
+                 {/* ------------      Button tiggers the add to cart action for this event    ------------------- */}
+
             <IonButton onClick={DownloadPaper}>
                 <IonIcon slot={`start`} icon={download} />
                 <IonLabel>download full copy</IonLabel>
