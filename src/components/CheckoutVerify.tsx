@@ -88,14 +88,14 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
             console.log(data)
 
             //on transaction complete payment states are set that will allow user to access papers saved
-            if (data.status == 1 && data.status_msg == "COMPLETED") {
-                validateSavedPapers();
-                setuploading(true)
-                setpaymentStatus(true)
+            // if (data.status == 1 && data.status_msg == "COMPLETED") {
+            //     validateSavedPapers();
+            //     setuploading(true)
+            //     setpaymentStatus(true)
                 
-            } else {
-                setpaymentStatus(false)
-            }
+            // } else {
+            //     setpaymentStatus(false)
+            // }
 
         }).catch((err) => {
             setpaymentStatus(false)
@@ -105,10 +105,11 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
     }
 
 
-    //action executed when the payment modal is closed
+    //action executed when the payment modal is closed 
     async function onPaymentModalDismissed() {
         const status = await getLocalStorageStatus()
         if (status && status == `true`) {
+            //payment is verified once the modal is closed
             verifyPaymentSuccess()
         }
         setinitializePayment(false);

@@ -9,27 +9,13 @@ import "../zitopay";
 import { getLocalStorageStatus, LocalStorageSetLoadedStatus } from "../data/LocalStorageSetLoadedStatus";
 
 
-const { Storage } = Plugins
 const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: boolean, reference: string }> = ({ onDidDismiss, isOpen, cost, reference }) => {
 
-    const colors = [`dark`, `warning`, `success`, `medium`, `danger`]
     const paybtnRef = useRef<HTMLDivElement>(null)
-    const [change, setchange] = useState(0)
-    const [spinnerColor, setspinnerColor] = useState(`dark`)
-
-    useEffect(() => {
-
-    }, [isOpen])
-
-    async function clearLoadStatus(){
-        const val = Plugins.Storage.get({key:`pending_notification`})
-        console.log(`original value = `,val)
-       
-    }
-
+ 
 
     return (
-        <IonModal onDidPresent={() => { paybtnRef.current?.click();clearLoadStatus() }} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
+        <IonModal onDidPresent={() => { paybtnRef.current?.click();}} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
             <IonHeader mode='md'>
                 <IonToolbar  >
                     <IonLabel> Confirm Payment <IonBadge color='success' mode='ios'>{cost}</IonBadge></IonLabel>
@@ -54,6 +40,8 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
                             <IonCol></IonCol>
                         </IonRow>
                     </IonGrid> */}
+                    
+                    {/* -------------------        hidden button to initiate zito pay Iframe            --------------- */}
                     <IonToolbar style={{ minHeight: `80vh` }} color={`medium`}>
                         <div style={{ position: `relative` }} id="zitopayDiv"></div>
                         <div
