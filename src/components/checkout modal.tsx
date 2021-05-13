@@ -21,6 +21,8 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
   const { userInfo} = useContext(UserContext)
 
   const history = useHistory()
+
+  //calculating the ammount for a paper assuming all papers are bought in FCFA
   useEffect(() => {
 
     let sum = 0
@@ -31,30 +33,38 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
   }, [CheckOutPapers])
 
 
-
+// this method triggers the prop function that removes all papers from the cart
   function removePaperFromCheckOut(index: number) {
     removePaperFromAdded(index)
   }
 
+
+  // this function saves papers under the user's reference in firestore database
   async function SavePapersForUser() {
     let tempObject: any = {}
     const user = userInfo
     const papers = CheckOutPapers
+    //for loop iterates through Checkout papers
     for (let i = 0; i < CheckOutPapers.length; i++) {
       const paper = CheckOutPapers[i]
       tempObject[`${paper.id}`] = paper
       setuploading(true)
 
+      //condition verifies if the user exists and if he has a number
       if (user && user.tel) {
 
+        //for each iteration firestore is queried and each paper is stored under the users reference in 
         app.firestore()
           .collection(`users`)
           .doc(user.tel)
           .collection(`papers`)
           .doc(`${paper.id}`)
           .set(tempObject).then(async () => {
-
+             //once a paper is stored it is removed from cart
             removePaperFromCheckOut(i);
+
+
+            /**--------- other sections of the database are updated to persist download information ------------------ */
 
             // const newdownloads = parseInt(`${paper.downloads}`) != NaN ? parseInt(`${paper.downloads}`) + 1 : paper.downloads
             // app.database().ref(`allPapers`).child(paper.id).update({ downloads: newdownloads.toString() }).catch(alert)
@@ -72,6 +82,10 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
             setuploading(false)
           })
         if (i >= papers.length - 1) {
+
+
+          //once the process is complete for all papers a confirmation modal is show to take the users to the saved page where they can view papers
+
           Modals.confirm({ title: `Download SuccessFull`, message: `The Download has completed Successfully.\nGo to Downloads` })
             .then(res => {
               if (res.value === true) {
@@ -83,10 +97,11 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
             })
         }
       } else {
-        const res = (await Modals.confirm({ title: `Authentication Error`, message: `unable to buy papers because user is not authenticated`, okButtonTitle: `login` })).value
-        if (res) {
-          history.push(`/login`)
-        }
+
+        //redirects the user to the login page in the case where user does not locally exist
+         await Modals.confirm({ title: `Authentication Error`, message: `unable to buy papers because user is not authenticated`, okButtonTitle: `login` })
+         history.push(`/login`)
+        
 
       }
 
@@ -95,6 +110,8 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
   }
   return (
     <IonModal mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
+     
+     {/* ----------------     modal  header            -------------- */}
       <IonHeader mode='md'>
         <IonToolbar  >
           <IonLabel> Buy Papers <IonBadge color='success' mode='ios'>{CheckOutPapers.length}</IonBadge></IonLabel>
@@ -107,6 +124,7 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        {/* ----------------        all added papers appear here             ---------------- */}
         <IonToolbar mode='md' style={{ minHeight: `100%`, overflow: `scroll` }} color='light'>
           {
             CheckOutPapers.map((paper, index) => {
@@ -115,6 +133,8 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
                 removePaper={() => removePaperFromCheckOut(index)} />
             })
           }
+
+          {/* -----------------        Displaying the total cost of all the papers         ------------------- */}
           <div className={`checkout-total`}>
             <IonLabel>
               {CheckOutPapers.length > 1 && CheckOutPapers.map((paper, index) => {
@@ -126,6 +146,8 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
               <IonLabel color={`success`}>{costSum + ` `}</IonLabel>
             </IonLabel>
           </div>
+
+
           {CheckOutPapers.length > 0 ? <div  >
             <>{/* <IonButton
               
@@ -142,21 +164,24 @@ const CheckOutModal: React.FC<{ user: userInterface | undefined, removePaperFrom
                 <IonLabel className={`ion-margin-start`}> saving...</IonLabel>
               </> : <IonLabel >Download</IonLabel>} 
             </IonButton> */}</>
+
+
+            {/*---------------- buttons an spinners to initialize and process payments and modals-------------------------------  */}
             <div style={{ textAlign: `center` }}>
               {uploading && <IonButton color={`dark`}><IonSpinner color={`success`}></IonSpinner>
                 <IonLabel className={`ion-margin-start`}> saving...</IonLabel></IonButton>}
             </div>
+
+            
+             {/* ------------------- controls processing and payment verification-----------------------   */}
             <CheckoutVerify validateSavedPapers={() => SavePapersForUser()} CheckOutPapers={CheckOutPapers} costSum={costSum}></CheckoutVerify>
           </div> :
             <div style={{ padding: `10px`, textAlign: 'center' }}>
               <IonText color={`medium`}>No Papers Selected</IonText>
             </div>
           }
-
-
-        </IonToolbar>
+          </IonToolbar>
       </IonContent>
-
     </IonModal>
   )
 }
