@@ -1,5 +1,5 @@
-import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButton, IonList, IonFooter, IonFab, IonActionSheet, CreateAnimation, IonSpinner, IonTitle, IonItem } from "@ionic/react";
-import { chatbox, close, ellipsisVertical, shareSocial, star } from "ionicons/icons";
+import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButton, IonList, IonFooter, IonFab, IonActionSheet, CreateAnimation, IonSpinner, IonTitle, IonItem, IonFabButton } from "@ionic/react";
+import { add, chatbox, close, ellipsisVertical, shareSocial, star } from "ionicons/icons";
 import "../css/previewModal.css";
 import React, { useEffect, useRef, useState } from "react";
 import { savedPaperInterface } from "./componentTypes";
@@ -100,23 +100,24 @@ const ReadModal: React.FC<{
             onDidDismiss={onDidDismiss}  >
             <IonHeader>
                 <IonToolbar color='dark'>
-                    <IonButton fill={`clear`} slot={`start`}>
-                        <IonBackdrop></IonBackdrop>
-                        <IonIcon color="success" icon={close} ></IonIcon>
-                    </IonButton>
-                    <IonLabel  >{thisPaper?.title}</IonLabel>
-                    <IonButton onClick={() => {
+                    <IonItem lines={`none`} color={`none`}>
+                        <IonButton fill={`clear`} slot={`start`}>
+                            <IonBackdrop></IonBackdrop>
+                            <IonIcon color="success" icon={close} ></IonIcon>
+                        </IonButton>
+                        <IonLabel  >{thisPaper?.title}</IonLabel>
+                        <IonButton onClick={() => {
 
-                        setviewPop(true)
+                            setviewPop(true)
 
-                    }} fill={`clear`} slot={`end`}>
-                        <IonIcon icon={ellipsisVertical} ></IonIcon>
-                        <IonActionSheet cssClass={`read-menu-action`} buttons={[{ text: `add Review`, icon: chatbox, handler: () => setviewReview(true) }
-                            , { text: `star paper`, icon: star, handler: () => starThisPaper() }, { text: `share`, icon: shareSocial, handler: () => sharePaper() }]}
-                            isOpen={viewPop} onDidDismiss={() => setviewPop(false)} />
+                        }} fill={`clear`} slot={`end`}>
+                            <IonIcon icon={ellipsisVertical} ></IonIcon>
+                            <IonActionSheet cssClass={`read-menu-action`} buttons={[{ text: `add Review`, icon: chatbox, handler: () => setviewReview(true) }
+                                , { text: `star paper`, icon: star, handler: () => starThisPaper() }, { text: `share`, icon: shareSocial, handler: () => sharePaper() }]}
+                                isOpen={viewPop} onDidDismiss={() => setviewPop(false)} />
 
-                    </IonButton>
-
+                        </IonButton>
+                    </IonItem>
                 </IonToolbar>
             </IonHeader>
 
@@ -137,8 +138,6 @@ const ReadModal: React.FC<{
                             })}
 
                         </IonList>
-
-
                     </IonSlide>
 
                     <IonSlide >
@@ -148,15 +147,8 @@ const ReadModal: React.FC<{
                                 return <PaperImage key={index} url={url} />
                             })}
                         </IonList>
-
-
                     </IonSlide>
-
                 </IonSlides>
-
-
-
-
             </IonContent>
 
             <IonFab horizontal={`center`} vertical={`center`}>
@@ -219,20 +211,27 @@ export const PaperImage: React.FC<{ url: string }> = ({ url }) => {
     return (
         <div style={{ textAlign: `center`, minHeight: imgLoaded ? `auto` : `200px` }}>
             {!imgLoaded && <IonSpinner color={`primary`}></IonSpinner>}
-            <IonImg onClick={() => setshow(true)} onIonImgDidLoad={() => setimgLoaded(true)} src={img} />
+            <IonImg style={{ transform: `scale(1.1)` }} onClick={() => setshow(true)} onIonImgDidLoad={() => setimgLoaded(true)} src={img} />
             <IonModal swipeToClose={true} mode={`ios`} onDidDismiss={() => setshow(false)} cssClass={`zoom-img`} isOpen={show}>
                 <IonHeader>
-                    <IonSlide style={{height:`100vh`}}>
+                    <IonSlide style={{ height: `100vh` }}>
 
-                        <TransformWrapper defaultScale={1.1} options={{limitToBounds:false}} >
+                        <TransformWrapper defaultScale={1.1} options={{ limitToBounds: false }} >
                             <TransformComponent>
 
-                                <IonImg  style={{height:`100vh`}} src={img}></IonImg>
+                                <IonImg style={{ height: `100vh` }} src={img}></IonImg>
 
                             </TransformComponent>
                         </TransformWrapper>
+                        
                     </IonSlide>
                 </IonHeader>
+                <IonFab vertical={`bottom`} horizontal={`center`}>
+                    <IonFabButton>
+                        <IonBackdrop></IonBackdrop>
+                        <IonIcon icon={close}></IonIcon>
+                    </IonFabButton>
+                </IonFab>
             </IonModal>
         </div>
     )

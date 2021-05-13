@@ -33,3 +33,7 @@ ion-segment.reader-controller ion-segment-button ion-label{
 .zoom-img ion-item{
     --ion-background-color:rgba(0,0,0,0.72)
 }
+
+.review-form ion-card-title{
+ font-size: 14px;
+}

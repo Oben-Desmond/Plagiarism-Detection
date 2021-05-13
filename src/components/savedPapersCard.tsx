@@ -15,10 +15,10 @@ const  SavedPapersCard:
         const slidingRef = useRef<HTMLIonItemSlidingElement>(null)
         const [readPaper, setreadPaper] = useState(false)
       
-        const { title, answerUrl, questionUrl } = thisPaper
         const sliderBlurred = () => {
             slidingRef.current?.closeOpened()
         }
+        //opens modal that can allow user to see paper
         function openPaper() {
             Modals.confirm({ title: `Open Paper`, message: `Opening ${thisPaper.title}`, okButtonTitle: `open` })
                 .then((res) => {
@@ -41,7 +41,7 @@ const  SavedPapersCard:
                         </IonItemOption>
                     </IonItemOptions>
 
-                    <IonItem style={{ marginTop: `-7px` }} className={`starred-card`} color={`light`} lines={`none`}>
+                    <IonItem style={{ marginTop: `-7px`}} className={`starred-card`} color={`light`} lines={`none`}>
                         <IonCard onClick={() => openPaper()}  >
                             <IonGrid>
                                 <IonRow>

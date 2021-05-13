@@ -1,20 +1,53 @@
 import { IonPopover, IonContent, IonCardHeader, IonButtons, IonButton, IonIcon, IonCardContent, IonItem, IonLabel, IonTextarea, IonToolbar, IonCardTitle, IonBackdrop, IonNote, IonSlides, IonSlide } from "@ionic/react";
 import { star, starOutline } from "ionicons/icons";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { savedPaperInterface } from "./componentTypes";
+import app from "../Firebase";
+import { UserContext } from "./RouterOutlet";
+import { Plugins } from "@capacitor/core";
 
+const {Toast}= Plugins
 
-const ReviewPopover: React.FC<{ isOpen: boolean, onDidDismiss: () => void, thisPaper: savedPaperInterface }> = ({ isOpen, onDidDismiss }) => {
+const ReviewPopover: React.FC<{ isOpen: boolean, onDidDismiss: () => void, thisPaper: savedPaperInterface }> = ({ isOpen, onDidDismiss, thisPaper }) => {
     const [starCount, setStarCount] = useState(4)
     const startext = [`bad`, `not so good`, `fair`, `good`, `amazing`]
-    const slidesRef= useRef<HTMLIonSlidesElement>(null)
+    const slidesRef = useRef<HTMLIonSlidesElement>(null)
+    const { userInfo } = useContext(UserContext)
 
-    function submitReview() {
+    // adds review sent by client for a particular paper
+    
+    function submitReview(event:any) {
+        event.preventDefault();
+           const text =  event.target.text.value
+    
+        if (userInfo.tel) {
+            const date=Date.now()
+            const reviewObj={
+                stars:starCount,
+                username:userInfo.name,
+                date,
+                tel: userInfo.tel,
+                message:text
+            }
+            console.log(reviewObj)
+            onDidDismiss()
+            Toast.show({text:`sending review`,position:`center`,duration:`short`})
+          
+            app.firestore().collection(`uploader`)
+                .doc(thisPaper.author)
+                .collection(`papers`).doc(thisPaper.id)
+                .collection(`reviews`).doc(`${userInfo.tel + `` + date}`)
+                .set(reviewObj).then(()=>{
+                    Toast.show({text:`sent`,duration:`short`})
+                }).catch((err)=>{
+                    Toast.show({text:`${err.message}`,duration:`short`})
 
+                })
+        }
     }
     return (
         <IonPopover isOpen={isOpen} onDidDismiss={() => onDidDismiss()}>
-            <IonContent style={{ height: `230px` }}>
+            <IonContent>
                 <IonSlides ref={slidesRef}>
                     <IonSlide>
                         <IonCardHeader >
@@ -33,25 +66,24 @@ const ReviewPopover: React.FC<{ isOpen: boolean, onDidDismiss: () => void, thisP
 
                             </IonButtons>
                             <div style={{ textAlign: `center` }}>
-                                <IonButton onClick={()=>slidesRef.current?.slideNext()} shape={`round`} fill={`solid`} color={`dark`}>Next</IonButton>
+                                <IonButton onClick={() => slidesRef.current?.slideNext()} shape={`round`} fill={`solid`} color={`dark`}>Next</IonButton>
                             </div>
                         </IonCardHeader>
                     </IonSlide>
                     <IonSlide>
-                       
-                        <form onSubmit={submitReview}>
-                        <IonLabel>Send a message to the providers</IonLabel>
+
+                        <form className={`review-form`} onSubmit={submitReview}>
+                           <IonCardHeader> <IonCardTitle >Send a message to the the team</IonCardTitle ></IonCardHeader>
                             <IonCardContent>
 
                                 <IonItem>
-                                    <IonLabel position={`floating`}>add comment</IonLabel>
-                                    <IonTextarea name={`text`}></IonTextarea>
+                                    <IonLabel position={`floating`}></IonLabel>
+                                    <IonTextarea placeholder={`example: This paper is amazing..`} name={`text`}></IonTextarea>
                                 </IonItem>
                             </IonCardContent>
                             <IonToolbar style={{ textAlign: `center` }} color={`none`}>
                                 <IonButton type={"submit"} color={`dark`} shape={`round`} >
                                     submit
-                        <IonBackdrop></IonBackdrop>
                                 </IonButton>
                             </IonToolbar>
                         </form>

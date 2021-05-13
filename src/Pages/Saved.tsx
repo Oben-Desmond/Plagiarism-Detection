@@ -128,15 +128,15 @@ const Saved: React.FC = () => {
     }
 
     //    fetches pening papers from local storage
-    async function initiatlizePendingPapers() {
-        const pendingVALUE: string | null = (await Storage.get({ key: `pending` })).value
-        if (pendingVALUE) {
-            const pendingObj = JSON.parse(pendingVALUE)
-            const pendingArr: any[] = Object.values(pendingObj)
-            setpendingPapers([...pendingArr])
-        }
+    // async function initiatlizePendingPapers() {
+    //     const pendingVALUE: string | null = (await Storage.get({ key: `pending` })).value
+    //     if (pendingVALUE) {
+    //         const pendingObj = JSON.parse(pendingVALUE)
+    //         const pendingArr: any[] = Object.values(pendingObj?pendingObj:{})
+    //         setpendingPapers([...pendingArr])
+    //     }
 
-    }
+    // }
 
     //this searches papers by title
     function handleSearch() {
@@ -220,7 +220,7 @@ const Saved: React.FC = () => {
 
     useIonViewDidEnter(() => {
         initializeLocalStarred()
-        initiatlizePendingPapers()
+        // initiatlizePendingPapers()
     })
     return (
         <IonPage>

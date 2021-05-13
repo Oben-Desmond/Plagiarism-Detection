@@ -4,7 +4,7 @@ import { close, star, trash } from "ionicons/icons";
 import React, { useState } from "react";
 import { localImages } from "../img/Images";
 import { savedPaperInterface } from "./componentTypes";
-import ReadModal from "./read modal";
+import ReadModal, { PaperImage } from "./read modal";
 import "./style/starredCard.css";
 
 const {Modals}=Plugins
@@ -35,19 +35,14 @@ const StarredPaperCard: React.FC<{ deleteFromStarred:()=>void,thisPaper: savedPa
                 </IonButtons>
             </IonToolbar>
             <div onClick={() => setreadPaper(true)} className={`saved-container-img`}>
-                <IonImg src={questionUrl[0]} />
+                <PaperImage url={questionUrl[0]} />
             </div >
             <IonCardHeader  onClick={() => setreadPaper(true)}  >
                 <IonToolbar color={`none`}>
                     <IonCardTitle>{title}</IonCardTitle>
                 </IonToolbar>
             </IonCardHeader>
-            {/* <IonCardContent    >
-            <IonCardSubtitle color='success'>MIA - Official</IonCardSubtitle>
-            <IonText>{description.substr(0,170)+`...`}</IonText>
-            
-        </IonCardContent> */}
-            <ReadModal thisPaper={thisPaper} isOpen={readPaper} onDidDismiss={() => { setreadPaper(false) }}> </ReadModal>
+             <ReadModal thisPaper={thisPaper} isOpen={readPaper} onDidDismiss={() => { setreadPaper(false) }}> </ReadModal>
             <IonProgressBar color={paperColor}></IonProgressBar>
 
         </IonCard>
