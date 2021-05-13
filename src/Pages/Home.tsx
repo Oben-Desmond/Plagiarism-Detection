@@ -12,7 +12,7 @@ import { searchArrowSeeker } from "../data/animations";
 import { useHistory } from "react-router";
 import { removeOccurence } from "./Saved";
 
-const { Storage, Keyboard, Modals } = Plugins
+const { Storage, Keyboard, Modals, BackgroundTask, LocalNotifications, App } = Plugins
 
 
 const Home: React.FC = () => {
@@ -51,6 +51,20 @@ const Home: React.FC = () => {
      * initialize user obtains user data stored in local storage
      */
     intializeUser()
+
+    const task = BackgroundTask.beforeExit(() => {
+      if (searching) {
+        LocalNotifications.schedule({
+          notifications: [{
+            body: `Your Search is on the way`,
+            id: Math.random(),
+            title: `Quesers has you covered`,
+            schedule: { at: (new Date(Date.now())), }
+          }]
+        })
+      }
+    })
+    BackgroundTask.finish({ taskId: task })
 
   }, [])
 
@@ -120,6 +134,20 @@ const Home: React.FC = () => {
               RankKeys(searchResult)
               //at the end of the queries the RankKeys method is called rank the search results in other of importance
             }
+
+            App.getState().then((appstate) => {
+
+              if (!appstate.isActive) {
+                LocalNotifications.schedule({
+                  notifications: [{
+                    body: `Your Search is ready`,
+                    id: Math.random(),
+                    title: `${searchtext}`,
+                    schedule: { at: (new Date(Date.now())), }
+                  }]
+                })
+              }
+            })
           }, (err) => {
 
             //login out an error incase there is one using the alert function
@@ -204,6 +232,10 @@ const Home: React.FC = () => {
 
             if (fetchedPapers.length === 0) {
               setnoResults(true)
+              if (currentUser && currentUser?.tel)
+                app.database().ref(`no-result`).push(
+                  { query: searchBarRef.current?.value, date: (new Date()).toDateString(), user: currentUser?.tel, name: currentUser?.name }
+                )
             }
           }
 
@@ -363,7 +395,7 @@ const Home: React.FC = () => {
         { offset: 0.7, transform: `scale(1.2) rotate(-0deg) translate(-120px, 0)`, },
         { offset: 1, transform: `scale(1) rotate(0deg) translate(0px, 0px)`, },
       ]} stop={!play} play={play} duration={800}  >
-        <IonFab style={{ transform: badgeNum ===0 ? `scale(0)` : `scale(1)` }} vertical="bottom" horizontal="end">
+        <IonFab style={{ transform: badgeNum === 0 ? `scale(0)` : `scale(1)` }} vertical="bottom" horizontal="end">
           <IonFabButton onClick={() => setcheckOut(true)} color="success">
             <IonIcon icon={cart} />
             <IonBadge color="dark" mode="ios" >{badgeNum}</IonBadge>
