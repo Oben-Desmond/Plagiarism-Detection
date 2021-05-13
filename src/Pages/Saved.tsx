@@ -97,15 +97,16 @@ const Saved: React.FC = () => {
             else {
                 //display an error when user is not found
                 const res = (await Modals.confirm({ title: `Authentication Error`, message: `unable to buy papers because user is not authenticated`, okButtonTitle: `login` })).value
-                if (res) {
-                    history.push(`/login`)
-                }
+
+                history.push(`/login`)
             }
         }
 
 
 
     }
+
+    //fetches starred papers from local storage an preserves in state
     async function initializeLocalStarred() {
         const starredVALUE = (await Storage.get({ key: `starredPapers` })).value
         if (starredVALUE) {
@@ -114,6 +115,8 @@ const Saved: React.FC = () => {
             setstarredPapersKeys([...(paper.map(paper => paper.id))])
         }
     }
+
+    // set blur state that changes search bar animation
     function focusSearch() {
         setsearchBlurred(false)
 
@@ -124,7 +127,7 @@ const Saved: React.FC = () => {
 
     }
 
-
+    //    fetches pening papers from local storage
     async function initiatlizePendingPapers() {
         const pendingVALUE: string | null = (await Storage.get({ key: `pending` })).value
         if (pendingVALUE) {
@@ -134,33 +137,49 @@ const Saved: React.FC = () => {
         }
 
     }
+
+    //this searches papers by title
     function handleSearch() {
         let value = removeOccurence(searchBarRef.current?.value?.toLowerCase(), [` `])
         if (value == ``) {
             setdisplaySavedPapers([...savedPapers])
         }
         if (value) {
-            const newdisplay = savedPapers.filter(paper => removeOccurence(paper.title, [` `]).toLowerCase().match(value + ``))
+            const newdisplay = savedPapers.filter(paper =>
+                 (removeOccurence(paper.title, [` `])
+                 .toLowerCase() + 
+                 removeOccurence(paper.description, [` `])
+                 .toLowerCase()).match(value + ``))
+
             setdisplaySavedPapers([...newdisplay])
         }
 
     }
+
+    //navigates to a specified url within app
     function navigateTo(path: string) {
         history.push(path)
     }
 
+
+    //deletes papers being saved
     async function deleteSavedPaper(paper: savedPaperInterface) {
         const { title, id } = paper
         const currentUser = userInfo
+
+        //verifies if user is logged in
         if (currentUser) {
             const res = (await Modals.confirm({ title: `Delete Paper`, message: `Are you sure you want to Delete ${title}?`, okButtonTitle: `Delete` })).value
             if (!res) {
                 return
             }
+            //deletes single paper from local storage
             if (savedPapers.length == 1) {
                 setsavedPapers([])
                 Storage.set({ key: `savedPapers`, value: JSON.stringify([]) })
             }
+
+            //proceeds to remove paper from database
             app.firestore()
                 .collection(`users`)
                 .doc(currentUser.tel)
@@ -174,15 +193,19 @@ const Saved: React.FC = () => {
         }
     }
 
+    
     useEffect(() => {
         if (savedPapers) {
             setdisplaySavedPapers([...savedPapers])
         }
     }, [savedPapers])
+
+
+    // starring paper 
     async function starPaper(index: number) {
         const paper = savedPapers[index]
         if (starredPapersKeys.indexOf(paper.id) < 0) {
-
+           //code to verify if paper is already starred  and adding to local storage if not
             await Storage.set({ key: `starredPapers`, value: JSON.stringify([...starredPapers, paper]) })
             initializeLocalStarred()
             setstarToast(queserStarredMessage)
@@ -244,6 +267,7 @@ const Saved: React.FC = () => {
                 </>
 
                 }
+                {/* ---------------     where saved papers are displayed          ----------------------- */}
                 {
                     displaySavedPapers.map((paper, index) => {
                         const starred = (starredPapersKeys.indexOf(paper.id) >= 0) ? true : false;
