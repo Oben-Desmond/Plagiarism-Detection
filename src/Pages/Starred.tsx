@@ -12,7 +12,7 @@ const { Storage } = Plugins
 
 const Starred: React.FC = () => {
     const [starredPaper, setstarredPaper] = useState<savedPaperInterface[]>([])
-    
+
     const refresherRef = useRef<HTMLIonRefresherElement>(null)
     const [deletAnim, setdeleteAnim] = useState(false)
     const [fallStar, setfallStar] = useState(false)
@@ -21,6 +21,8 @@ const Starred: React.FC = () => {
         initialLizeLocalPapers()
     })
 
+
+    //obtaining locally saved starred papers
     async function initialLizeLocalPapers() {
         const paperValue = (await Storage.get({ key: `starredPapers` })).value
 
@@ -29,24 +31,29 @@ const Starred: React.FC = () => {
             setstarredPaper([...paper])
         }
     }
+
+    //refreshing starred papers
     async function refreshStarred() {
         await initialLizeLocalPapers()
         refresherRef.current?.complete()
     }
-    useIonViewDidEnter(()=>{
+
+    //animating falling star
+    useIonViewDidEnter(() => {
         setfallStar(true)
     })
-   
-    async function deleteFromStarred(index:number){
-         const temp = starredPaper
+
+    //removing a paper from all the starred papers store locally
+    async function deleteFromStarred(index: number) {
+        const temp = starredPaper
         temp.splice(index, 1)
         await Storage.set({ key: `starredPapers`, value: JSON.stringify(temp) })
         initialLizeLocalPapers()
         setdeleteAnim(true)
     }
-    
 
-   
+
+
     return (
         <IonPage>
             <IonHeader>
@@ -67,19 +74,19 @@ const Starred: React.FC = () => {
                 }
                 {/* <QuestionCard desc='' downloads='' title=''  addToCart={()=>{}}></QuestionCard> */}
 
-                
+                {/* ------------------           starred papers are displayed here     --------------------- */}
                 {
                     starredPaper.map((paper, index) => {
                         const colors = [`danger`, `secondary`, `tertiary`, `warning`, `dark`, `success`, `medium`, `dark`]
-                        
-                        return <StarredPaperCard deleteFromStarred={()=>deleteFromStarred(index)} color={colors[index % colors.length]} key={index} thisPaper={paper}></StarredPaperCard>
+
+                        return <StarredPaperCard deleteFromStarred={() => deleteFromStarred(index)} color={colors[index % colors.length]} key={index} thisPaper={paper}></StarredPaperCard>
                     })
                 }
 
             </IonContent>
             {<CreateAnimation onFinish={{ callback: () => setfallStar(false) }} stop={!fallStar} play={fallStar} duration={1200} keyframes={fallKeyFrame}  >
-                    <IonIcon style={{ transform: `translateX(39vw)`, opacity: 0,position:`fixed`,top:`10vh` }} color={`warning`} size={`large`} icon={star} ></IonIcon>
-                </CreateAnimation>}
+                <IonIcon style={{ transform: `translateX(39vw)`, opacity: 0, position: `fixed`, top: `10vh` }} color={`warning`} size={`large`} icon={star} ></IonIcon>
+            </CreateAnimation>}
         </IonPage>
 
     )
