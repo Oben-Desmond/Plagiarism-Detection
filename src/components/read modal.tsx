@@ -32,7 +32,11 @@ const ReadModal: React.FC<{
         pagination: {
             el: null
         },
-
+      zoom:{
+            scale:3,
+            enabled:true
+        
+      }
     };
 
     useEffect(() => {
@@ -126,7 +130,7 @@ const ReadModal: React.FC<{
 
 
 
-                <IonSlides options={slideOpts} onIonSlideDidChange={(e) => handleSlideChange(e)} ref={slider} className={`paper-slides`}>
+                <IonSlides  options={slideOpts} onIonSlideDidChange={(e) => handleSlideChange(e)} ref={slider} className={`paper-slides`}>
 
                     <IonSlide>
 
@@ -211,20 +215,19 @@ export const PaperImage: React.FC<{ url: string }> = ({ url }) => {
     return (
         <div style={{ textAlign: `center`, minHeight: imgLoaded ? `auto` : `200px` }}>
             {!imgLoaded && <IonSpinner color={`primary`}></IonSpinner>}
-            <IonImg style={{ transform: `scale(1.1)` }} onClick={() => setshow(true)} onIonImgDidLoad={() => setimgLoaded(true)} src={img} />
+            <div style={{ background: !imgLoaded?`transparent`:`#b0daa9`, transition: `background 1s` }}>
+                <IonImg style={{ opacity: 1, transition: `opacity 1s` }} onClick={() => setshow(true)} onIonImgDidLoad={() => setimgLoaded(true)} src={img} />
+            </div>
             <IonModal swipeToClose={true} mode={`ios`} onDidDismiss={() => setshow(false)} cssClass={`zoom-img`} isOpen={show}>
                 <IonHeader>
-                    <IonSlide style={{ height: `100vh` }}>
-
-                        <TransformWrapper defaultScale={1.1} options={{ limitToBounds: false }} >
+                    <TransformWrapper defaultScale={1.1} options={{ limitToBounds: true }} >
+                       
                             <TransformComponent>
 
                                 <IonImg style={{ height: `100vh` }} src={img}></IonImg>
 
                             </TransformComponent>
-                        </TransformWrapper>
-                        
-                    </IonSlide>
+                      </TransformWrapper>
                 </IonHeader>
                 <IonFab vertical={`bottom`} horizontal={`center`}>
                     <IonFabButton>

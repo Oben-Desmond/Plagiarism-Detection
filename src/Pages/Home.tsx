@@ -63,8 +63,9 @@ const Home: React.FC = () => {
           }]
         })
       }
+      BackgroundTask.finish({ taskId: task })
     })
-    BackgroundTask.finish({ taskId: task })
+    
 
   }, [])
 

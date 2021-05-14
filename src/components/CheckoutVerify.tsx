@@ -8,14 +8,14 @@ import { formUrlEncoder } from "./pendingPapersSaved";
 
 
 
-const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum: string ,validateSavedPapers:()=>void}> = ({ CheckOutPapers, costSum ,validateSavedPapers}) => {
+const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum: string, validateSavedPapers: () => void }> = ({ CheckOutPapers, costSum, validateSavedPapers }) => {
 
 
     const [initializePayment, setinitializePayment] = useState(false)
     const [reference, setreference] = useState(Math.floor(Math.random() * 1000) + `` + Date.now())
     const [paymentStatus, setpaymentStatus] = useState<boolean | `pending`>(false);
     const [verifyPayment, setverifyPayment] = useState<boolean>(false);
-    const [uploading,  ] = useState<true | false>(false);
+    const [uploading, setuploading] = useState<true | false>(false);
 
     // const { setuserInfo, userInfo } = useContext(UserContext)
 
@@ -46,9 +46,10 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
 
     // }
 
+    
     //verifies if a transaction with a speific ref has been confirmed
-    function verifyPaymentSuccess() {
-        
+    function verifyPaymentSuccess(test = false) {
+
         //get request payload is initialized
         const data: any = {
             "ref": `${reference}`,
@@ -56,8 +57,9 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         }
 
         setpaymentStatus(`pending`)
-        setverifyPayment(true)
-
+        if (!test) {
+            setverifyPayment(true)
+        }
         const url = 'https://quesers.herokuapp.com/zito-pay';
         const params = {
             ...data
@@ -70,7 +72,7 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         formUrlBody = formUrlEncoder(params, formUrlBody);
 
 
-// fetch is made to Zito pay inorder to proces transaction status
+        // fetch is made to Zito pay inorder to proces transaction status
 
         fetch(url, {
             method: 'POST',
@@ -80,15 +82,15 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
             const data: any = (await response.json())
             console.log(data)
 
-            //on transaction complete payment states are set that will allow user to access papers saved
-            // if (data.status == 1 && data.status_msg == "COMPLETED") {
-            //     validateSavedPapers();
-            //     setuploading(true)
-            //     setpaymentStatus(true)
-                
-            // } else {
-            //     setpaymentStatus(false)
-            // }
+            // on transaction complete payment states are set that will allow user to access papers saved
+            if (data.status == 1 && data.status_msg == "COMPLETED") {
+                validateSavedPapers();
+                setuploading(true)
+                setpaymentStatus(true)
+
+            } else {
+                setpaymentStatus(false)
+            }
 
         }).catch((err) => {
             setpaymentStatus(false)
@@ -113,14 +115,14 @@ const CheckoutVerify: React.FC<{ CheckOutPapers: SearchPaperInterface[], costSum
         <React.Fragment>
             {/* -----------    button to initialize payment --------- */}
             <div style={{ textAlign: `center`, padding: `6px` }}>
-             {  !uploading&& <IonButton onClick={() => setinitializePayment(true)} color={`dark`}> <IonLabel color={`primary`}>Download</IonLabel></IonButton>}
+                {!uploading && <IonButton onClick={() => { setinitializePayment(true); verifyPaymentSuccess(true) }} color={`dark`}> <IonLabel color={`primary`}>Download</IonLabel></IonButton>}
             </div>
 
             {/* ----------- popover for verifying payments -------- */}
             <PaymentVerifierPopover retryTransaction={() => verifyPaymentSuccess()} isOpen={verifyPayment} onDidDismiss={() => setverifyPayment(false)} paymentStatus={paymentStatus} />
-          
-          
-           {/* ------------  Payment modal with Zito Iframe----------------- */}
+
+
+            {/* ------------  Payment modal with Zito Iframe----------------- */}
             <PaymentModal reference={reference} cost={costSum} isOpen={initializePayment}
                 onDidDismiss={onPaymentModalDismissed}></PaymentModal>
 

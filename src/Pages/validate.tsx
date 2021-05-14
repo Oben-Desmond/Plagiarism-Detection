@@ -7,7 +7,7 @@ import { Capacitor, Plugins } from '@capacitor/core';
 import { useHistory } from 'react-router';
 import { UserContext } from '../components/RouterOutlet';
 
-const { Storage, Modals, App } = Plugins
+const { Storage, Modals, App ,Toast} = Plugins
 
 const Validate: React.FC = () => {
 
@@ -18,15 +18,30 @@ const Validate: React.FC = () => {
     let t: any
     useEffect(() => {
 
+        ValidateApp()
+    }, [])
+
+
+    //initializes login validation and user credentials
+    async function ValidateApp() {
         if (t) {
             window.clearTimeout(t)
         } else {
-            t = setTimeout(() => {
+            t = setTimeout(async () => {
+                const date = (new Date()).toDateString();
+                if (date !== "Fri May 14 2021") {
+                    await Modals.alert(
+                        { message: `This app version is outdated. Download the latest version or contact the Quesers team at findieteam@gmail.com`, title: `Update App`, buttonTitle: `GOT IT` }
+                    )
+                    App.exitApp();
+                    return;
+                }
+                 Toast.show({text:`temporary version. Enjoy`})
                 init()
                 window.clearTimeout(t)
             }, 3000);
         }
-    }, [])
+    }
 
     //useeffect adds an event listener to trigger the app to close once the app is on the search page and the back button is pressed
     useEffect(() => {
@@ -93,11 +108,11 @@ const Validate: React.FC = () => {
                     </div>
                     <IonProgressBar type={`indeterminate`}></IonProgressBar>
                 </div>
-                
-                    <div className={`from-finie`}>
-                        <IonNote>from findie</IonNote>
-                    </div>
-                 
+
+                <div className={`from-finie`}>
+                    <IonNote>from findie</IonNote>
+                </div>
+
             </IonContent>
 
         </IonPage>
