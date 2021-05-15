@@ -11,7 +11,7 @@ import numConverter from "../data/number converter";
 
 const QuestionCard: React.FC<{ addQuestionToCart: () => void, thisPaper: SearchPaperInterface, PapersAdded: SearchPaperInterface[], PaperDownloaded: boolean }> = (props) => {
     const { addQuestionToCart, thisPaper, PaperDownloaded } = props
-    const { title, description, downloads } = thisPaper
+    const { title, description, downloads, year } = thisPaper
     const [ShowModal, setShowModal] = useState(false);
     const [Downloaded, setDownloaded] = useState(false);
     const [paperdownloads, setpaperdownloads] =  useState<string>(downloads)
@@ -43,7 +43,7 @@ const QuestionCard: React.FC<{ addQuestionToCart: () => void, thisPaper: SearchP
             <IonCard   >
                 <IonCardHeader>
                     <IonToolbar>
-                        <IonCardTitle>{title}</IonCardTitle>
+                        <IonCardTitle>{title} {year}</IonCardTitle>
 
                         <IonButtons style={{width:`100%`}}  >
                             <IonButton>
@@ -52,7 +52,7 @@ const QuestionCard: React.FC<{ addQuestionToCart: () => void, thisPaper: SearchP
                             </IonButton>
 
                             <span color='dark'style={{marginLeft:`19vw`}} >
-                                <IonLabel color={`medium`}>{paperdownloads} Downloads</IonLabel>
+                              {  +paperdownloads>10 &&<IonLabel color={`medium`}>{paperdownloads} Downloads</IonLabel>}
                             </span>
                         </IonButtons>
                     </IonToolbar>

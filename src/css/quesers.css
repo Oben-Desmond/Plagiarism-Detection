@@ -29,3 +29,8 @@ ion-chip.download-chip {
   opacity: 0.8;
 }
 
+.get-full{
+
+  color:var(--ion-color-primary)
+
+}

@@ -1,4 +1,4 @@
-import { CreateAnimation, IonBadge, IonCardContent, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonImg, IonMenuButton, IonPage, IonProgressBar, IonSearchbar, IonText, IonTitle, IonToolbar, useIonViewDidEnter } from "@ionic/react";
+import { CreateAnimation, IonBackdrop, IonBadge, IonButton, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonImg, IonMenuButton, IonPage, IonPopover, IonProgressBar, IonSearchbar, IonText, IonTitle, IonToolbar, useIonViewDidEnter } from "@ionic/react";
 import { arrowForward, arrowUp, cart } from "ionicons/icons";
 import React, { useEffect, useRef, useState } from "react";
 import QuestionCard from "../components/queserCard";
@@ -29,6 +29,7 @@ const Home: React.FC = () => {
   const [badgeNum, setbadgeNum] = useState(0)
   const [checkOut, setcheckOut] = useState(false)
   const [noResults, setnoResults] = useState(false)
+  const [showNote, setshowNote] = useState(false)
   const [currentUser, setcurrentUser] = useState<userInterface>()
   const [logout, setlogout] = useState(false)
 
@@ -130,6 +131,7 @@ const Home: React.FC = () => {
             else {
               setsearching(false)
               setpapers([])
+              setshowNote(true)
             }
             if (len === i + 1) {
               RankKeys(searchResult)
@@ -310,8 +312,7 @@ const Home: React.FC = () => {
 
   })
 
-
-
+ 
 
   return (
     <IonPage>
@@ -358,7 +359,7 @@ const Home: React.FC = () => {
 
         {
           nosearch && <IonFab vertical={`top`} horizontal={`center`}>
-            <CreateAnimation easing={`linear`} play={true} iterations={Infinity} duration={1500} keyframes={searchArrowSeeker}>
+            <CreateAnimation easing={`linear`} play={true} iterations={Infinity} duration={1500}  keyframes={searchArrowSeeker}>
               <IonIcon color={`success`} icon={arrowUp} size={`large`}></IonIcon>
             </CreateAnimation>
           </IonFab>}
@@ -389,13 +390,30 @@ const Home: React.FC = () => {
 
 
 
+    <IonPopover isOpen={showNote}>
+      <IonCardContent>
+         <IonCardHeader>
+         <IonCardTitle>Please Note</IonCardTitle>
+         </IonCardHeader>
+         <IonText>
+           Only Questions and solutions for Engineering Courses are currently found here.
+            all other courses will be provided shortly and you will be notified
+         </IonText>
+         <IonToolbar >
+           <IonButton slot={`end`} fill={`clear`}>
+             <IonBackdrop></IonBackdrop>
+             got it</IonButton>
+         </IonToolbar>
+      </IonCardContent>
+    </IonPopover>
+
       <NetworkIndicator ></NetworkIndicator>
       <CreateAnimation onFinish={{ callback: () => { setplay(false) } }} keyframes={[
         { offset: 0, transform: `scale(1) rotate(0deg)`, },
         { offset: 0.3, transform: `scale(1.1) rotate(0deg) translate(-120px, 0)`, },
         { offset: 0.7, transform: `scale(1.2) rotate(-0deg) translate(-120px, 0)`, },
         { offset: 1, transform: `scale(1) rotate(0deg) translate(0px, 0px)`, },
-      ]} stop={!play} play={play} duration={800}  >
+      ]} stop={!play} play={play} duration={800} delay={400}  >
         <IonFab style={{ transform: badgeNum === 0 ? `scale(0)` : `scale(1)` }} vertical="bottom" horizontal="end">
           <IonFabButton onClick={() => setcheckOut(true)} color="success">
             <IonIcon icon={cart} />

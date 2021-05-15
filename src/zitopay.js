@@ -36,6 +36,9 @@ export var Zitopay = function () {
         },
         pay: function (options, inline_display) {
             LocalStorageSetLoadedStatus(false);
+            document.getElementById(`progress-payment`).setAttribute(`type`,`indeterminate`)
+            document.getElementById(`progress-payment`).setAttribute(`display`,`block`)     
+
             if (typeof inline_display === 'undefined') inline_display = false;
 
             if (!options) return this.log_error("Valid Payment Options Not Supplied", options);
@@ -227,7 +230,10 @@ export var Zitopay = function () {
                     document.getElementById('zitopayLoading').style.display = 'none';
                     document.getElementById('zitopayPaymentIframe').style.display = 'block';
                     LocalStorageSetLoadedStatus(true);
-                 
+                    document.getElementById(`progress-payment`).setAttribute(`type`,`determinate`)
+                    document.getElementById(`progress-payment`).setAttribute(`display`,`none`)
+                  
+                   
 
                     var temp = document.getElementById('zitopayPaymentIframe');
                     window.scrollTo(0, temp.offsetTop);

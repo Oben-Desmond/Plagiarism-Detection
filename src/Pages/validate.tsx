@@ -28,15 +28,7 @@ const Validate: React.FC = () => {
             window.clearTimeout(t)
         } else {
             t = setTimeout(async () => {
-                const date = (new Date()).toDateString();
-                if (date !== "Fri May 14 2021") {
-                    await Modals.alert(
-                        { message: `This app version is outdated. Download the latest version or contact the Quesers team at findieteam@gmail.com`, title: `Update App`, buttonTitle: `GOT IT` }
-                    )
-                    App.exitApp();
-                    return;
-                }
-                 Toast.show({text:`temporary version. Enjoy`})
+               
                 init()
                 window.clearTimeout(t)
             }, 3000);

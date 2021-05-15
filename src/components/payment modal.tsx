@@ -1,17 +1,18 @@
-import { IonModal, IonHeader, IonToolbar, IonLabel, IonBadge, IonButtons, IonButton, IonBackdrop, IonIcon, IonContent } from "@ionic/react";
+import { IonModal, IonHeader, IonToolbar, IonLabel, IonBadge, IonButtons, IonButton, IonBackdrop, IonIcon, IonContent, IonProgressBar } from "@ionic/react";
 import { close } from "ionicons/icons";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import "./style/checkoutModal.css";
 import "../zitopay";
+import { UserContext } from "./RouterOutlet";
 
 
 const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: boolean, reference: string }> = ({ onDidDismiss, isOpen, cost, reference }) => {
 
     const paybtnRef = useRef<HTMLDivElement>(null)
- 
+    const { userInfo } = useContext(UserContext)
 
     return (
-        <IonModal onDidPresent={() => { paybtnRef.current?.click();}} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
+        <IonModal onDidPresent={() => { paybtnRef.current?.click(); }} mode='ios' cssClass="cart-modal" onDidDismiss={onDidDismiss} isOpen={isOpen}>
             <IonHeader mode='md'>
                 <IonToolbar  >
                     <IonLabel> Confirm Payment <IonBadge color='success' mode='ios'>{cost}</IonBadge></IonLabel>
@@ -22,6 +23,8 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
                         </IonButton>
                     </IonButtons>
                 </IonToolbar>
+                <IonProgressBar color={`success`} value={0} type={`determinate`} id={`progress-payment`}  ></IonProgressBar>
+
             </IonHeader>
             <IonContent>
 
@@ -46,9 +49,10 @@ const PaymentModal: React.FC<{ cost: string, onDidDismiss: () => void, isOpen: b
                             className="pay-with-zitopay"
                             data-amount={cost}
                             data-currency="XAF"
-                            data-email="ndehngwa@gmail.com"
                             data-receiver="akumah"
                             data-ref={reference}
+                            data-phone={(userInfo.tel + ``).substr(4)}
+                            data-theme_color={`Green`}
                             success-url="https://quesers-app.web.app"
                         ></div>
                     </IonToolbar>

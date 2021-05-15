@@ -1,4 +1,4 @@
-import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButton, IonList, IonFooter, IonFab, IonActionSheet, CreateAnimation, IonSpinner, IonTitle, IonItem, IonFabButton } from "@ionic/react";
+import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButton, IonList, IonFooter, IonFab, IonActionSheet, CreateAnimation, IonSpinner, IonTitle, IonItem, IonFabButton, IonPopover, IonText, IonCardContent } from "@ionic/react";
 import { add, chatbox, close, ellipsisVertical, shareSocial, star } from "ionicons/icons";
 import "../css/previewModal.css";
 import React, { useEffect, useRef, useState } from "react";
@@ -32,11 +32,11 @@ const ReadModal: React.FC<{
         pagination: {
             el: null
         },
-      zoom:{
-            scale:3,
-            enabled:true
-        
-      }
+        zoom: {
+            scale: 3,
+            enabled: true
+
+        }
     };
 
     useEffect(() => {
@@ -94,7 +94,7 @@ const ReadModal: React.FC<{
     const sharePaper = () => {
         Share.share({
             dialogTitle: `Share Question with Friends`,
-            text: `check out ${thisPaper.title} on Quesers`, title: `Quesers Questions and Answers`, url: `https://Quesers.web.app/${thisPaper.id}`
+            text: `check out ${thisPaper.title} on Quesers`, title: `Quesers Questions and Answers`, url: `https://play.google.com/store/apps/details?id=io.ionic.quesers`
         })
     }
 
@@ -130,22 +130,15 @@ const ReadModal: React.FC<{
 
 
 
-                <IonSlides  options={slideOpts} onIonSlideDidChange={(e) => handleSlideChange(e)} ref={slider} className={`paper-slides`}>
-
+                <IonSlides options={slideOpts} onIonSlideDidChange={(e) => handleSlideChange(e)} ref={slider} className={`paper-slides`}>
                     <IonSlide>
-
                         <IonList    >
-
                             {thisPaper?.questionUrl?.map((url, index) => {
                                 return <PaperImage key={index} url={url}></PaperImage>
-
                             })}
-
                         </IonList>
                     </IonSlide>
-
                     <IonSlide >
-
                         <IonList>
                             {thisPaper?.answerUrl?.map((url, index) => {
                                 return <PaperImage key={index} url={url} />
@@ -181,10 +174,13 @@ const ReadModal: React.FC<{
 
 export default ReadModal
 
+let a = -1;
+
 export const PaperImage: React.FC<{ url: string }> = ({ url }) => {
     const [img, setimg] = useState(``)
     const [imgLoaded, setimgLoaded] = useState(false)
     const [show, setshow] = useState(false)
+    const [ZoomHint, setZoomHint] = useState(false)
     useEffect(() => {
 
         async function initImg() {
@@ -214,20 +210,38 @@ export const PaperImage: React.FC<{ url: string }> = ({ url }) => {
     }, [])
     return (
         <div style={{ textAlign: `center`, minHeight: imgLoaded ? `auto` : `200px` }}>
+            <IonPopover isOpen={ZoomHint} >
+                <IonCardContent>
+                    <IonText><b> Tap the Page</b>. It will pop up to allow you zoom</IonText>
+                    <IonToolbar>
+                        <IonButton slot={`end`} fill={`clear`}>
+                            <IonBackdrop>
+                            </IonBackdrop>
+                        got it</IonButton>
+
+                    </IonToolbar>
+                </IonCardContent>
+            </IonPopover>
             {!imgLoaded && <IonSpinner color={`primary`}></IonSpinner>}
-            <div style={{ background: !imgLoaded?`transparent`:`#b0daa9`, transition: `background 1s` }}>
-                <IonImg style={{ opacity: 1, transition: `opacity 1s` }} onClick={() => setshow(true)} onIonImgDidLoad={() => setimgLoaded(true)} src={img} />
-            </div>
+            <TransformWrapper pinch={{ disabled: true }} zoomIn={{ disabled: true }} zoomOut={{ disabled: true }} 
+            onPinchingStop={() => {
+                a=a+1
+                if (!a) setZoomHint(true);
+                setshow(true)
+            }} wheel={{ disabled: true }} pan={{ disabled: true }} options={{ limitToBounds: true, }} >
+                <TransformComponent>
+                    <div >
+                        <IonImg style={{ opacity: 1, transition: `opacity 1s` }} onClick={() => setshow(true)} onIonImgDidLoad={() => setimgLoaded(true)} src={img} />
+                    </div>
+                </TransformComponent>
+            </TransformWrapper>
             <IonModal swipeToClose={true} mode={`ios`} onDidDismiss={() => setshow(false)} cssClass={`zoom-img`} isOpen={show}>
                 <IonHeader>
-                    <TransformWrapper defaultScale={1.1} options={{ limitToBounds: true }} >
-                       
-                            <TransformComponent>
-
-                                <IonImg style={{ height: `100vh` }} src={img}></IonImg>
-
-                            </TransformComponent>
-                      </TransformWrapper>
+                    <TransformWrapper defaultPositionX={-21.27} defaultPositionY={-95.63} defaultScale={1.32} options={{ limitToBounds: true }} >
+                        <TransformComponent>
+                            <IonImg style={{ height: `100vh` }} src={img}></IonImg>
+                        </TransformComponent>
+                    </TransformWrapper>
                 </IonHeader>
                 <IonFab vertical={`bottom`} horizontal={`center`}>
                     <IonFabButton>

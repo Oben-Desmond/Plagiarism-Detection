@@ -8,7 +8,8 @@ export interface SearchPaperInterface{
        id:string,
        cost:string,
        currency:string,
-       author:string
+       author:string,
+       year:string
        
 }
 

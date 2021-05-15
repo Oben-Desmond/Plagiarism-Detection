@@ -1,4 +1,4 @@
-import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButtons, IonButton, IonList, IonSpinner } from "@ionic/react";
+import { IonModal, IonHeader, IonToolbar, IonBackdrop, IonIcon, IonContent, IonSegment, IonSegmentButton, IonSlides, IonSlide, IonImg, IonLabel, IonButtons, IonButton, IonList, IonSpinner, IonFab, IonToast } from "@ionic/react";
 import { arrowBack, download } from "ionicons/icons";
 import "../css/previewModal.css";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,6 +14,7 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
 
     const slider = useRef<HTMLIonSlidesElement>(null);
     const [value, setValue] = useState("0");
+    const [showToast, setshowToast] = useState(false);
 
     const slideOpts = {
         initialSlide: 0,
@@ -44,7 +45,12 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
     return (
         <IonModal
             isOpen={isOpen}
-            onDidDismiss={onDidDismiss}
+            onDidDismiss={()=>{
+                setshowToast(false)
+                onDidDismiss()
+
+            }}
+            onDidPresent={()=>{}}
         >
             <IonHeader>
                 <IonToolbar color='dark'>
@@ -71,29 +77,33 @@ const PreviewModal: React.FC<{ isOpen: boolean, thisPaper: SearchPaperInterface,
                             {thisPaper?.questionUrl?.map((img, index) => {
                                 if (index === 0) return (
                                     <React.Fragment key={index}>
-                                        <PreviewPaperImage style={{ maxHeight: `35vh`, margin: 0 }}  className="" url={img} alt={thisPaper.description} />
-                                        <PreviewPaperImage style={{}}  className="hide" key={index} url={img} alt={thisPaper.description} />
+                                        <PreviewPaperImage imageLoaded={()=>{setshowToast(true)}} style={{ maxHeight: `35vh`, margin: 0 }} className="" url={img} alt={thisPaper.description} />
+                                        <PreviewPaperImage imageLoaded={()=>{}} style={{}} className="hide" key={index} url={img} alt={thisPaper.description} />
                                     </React.Fragment>)
-                                return <PreviewPaperImage style={{ margin: `0px`, padding: 0 }} className="hide" key={index} url={img} alt={thisPaper.description} />
+                                return <PreviewPaperImage imageLoaded={()=>{}} style={{ margin: `0px`, padding: 0 }} className="hide" key={index} url={img} alt={thisPaper.description} />
                             })}
                         </IonList>
                     </IonSlide>
                     <IonSlide>
                         <IonList>
                             {thisPaper?.answerUrl?.map((img, index) => {
-                                return <PreviewPaperImage style={{}} className="hide" key={index} url={img} alt={thisPaper.description} />
+                                return <PreviewPaperImage imageLoaded={()=>{}} style={{}} className="hide" key={index} url={img} alt={thisPaper.description} />
 
                             })}
                         </IonList>
                     </IonSlide>
                 </IonSlides>
+                {/* <IonFab style={{transform:`translateX(45%) translateY(28px)`}} vertical={`center`} horizontal={`start`}>
+                    <IonButton onClick={DownloadPaper}>
+                        <IonIcon slot="start" icon={download} />
+                        <IonLabel>Get full copy</IonLabel>
+                    </IonButton>
+                </IonFab> */}
+                <IonToast onDidDismiss={()=>setshowToast(false)}  buttons={[{text:`GET FULL COPY`,cssClass:`get-full`, side:`end`, handler:()=>DownloadPaper()}]} isOpen={showToast} message={`content is intentionally blurred`}></IonToast>
             </IonContent>
             {/* ------------      Button tiggers the add to cart action for this event    ------------------- */}
 
-            <IonButton onClick={DownloadPaper}>
-                <IonIcon slot="start" icon={download} />
-                <IonLabel>Get full copy</IonLabel>
-            </IonButton>
+
         </IonModal>
     )
 }
@@ -102,7 +112,7 @@ export default PreviewModal
 
 
 
-export const PreviewPaperImage: React.FC<{ url: string, className: string, style: any, alt: string }> = ({ url, className, alt, style, }) => {
+export const PreviewPaperImage: React.FC<{ url: string, className: string, style: any, alt: string, imageLoaded:()=>void }> = ({ url, className, alt, style,imageLoaded }) => {
     const [img, setimg] = useState(``)
     const [imgLoaded, setimgLoaded] = useState(false)
     const [show, setshow] = useState(false)
@@ -132,11 +142,12 @@ export const PreviewPaperImage: React.FC<{ url: string, className: string, style
             initImg()
         }
     }, [])
-    
+
+
     return (
         <div style={{ textAlign: `center`, minHeight: imgLoaded ? `auto` : `200px` }}>
             {!imgLoaded && <IonSpinner color={`primary`}></IonSpinner>}
-            <IonImg className={className} style={style} onIonImgDidLoad={() => setimgLoaded(true)} alt={alt} src={img} />
+            <IonImg className={className} style={style} onIonImgDidLoad={() =>{ setimgLoaded(true);imageLoaded()}} alt={alt} src={img} />
             <IonModal swipeToClose={true} mode={`ios`} onDidDismiss={() => setshow(false)} cssClass={`zoom-img`} isOpen={show}>
                 <IonHeader>
                     <IonSlide style={{ height: `100vh` }}>

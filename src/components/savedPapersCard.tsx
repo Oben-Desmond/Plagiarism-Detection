@@ -1,5 +1,5 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCheckbox, IonCol, IonContent, IonGrid, IonIcon, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonModal, IonProgressBar, IonRow, IonText, IonToast, IonToolbar } from "@ionic/react";
-import { star, trash } from "ionicons/icons";
+import { CreateAnimation, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCheckbox, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonIcon, IonImg, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonModal, IonProgressBar, IonRow, IonSpinner, IonText, IonToast, IonToolbar } from "@ionic/react";
+import { chevronBack, star, trash } from "ionicons/icons";
 import React, { useRef, useState } from "react";
 // import '../css/quesers.css'
 import './style/saved paper card.css'
@@ -9,12 +9,12 @@ import ReadModal from "./read modal";
 import { Plugins } from "@capacitor/core";
 // import { useState } from "react";
 const { Modals } = Plugins
-const  SavedPapersCard:
-    React.FC<{ starred: boolean, thisPaper: savedPaperInterface, starPaper: () => void, deleteSavedPaper:()=>void }> = ({ starred, thisPaper, starPaper, deleteSavedPaper }) => {
+const SavedPapersCard:
+    React.FC<{ starred: boolean, thisPaper: savedPaperInterface, starPaper: () => void, deleteSavedPaper: () => void }> = ({ starred, thisPaper, starPaper, deleteSavedPaper }) => {
 
         const slidingRef = useRef<HTMLIonItemSlidingElement>(null)
         const [readPaper, setreadPaper] = useState(false)
-      
+
         const sliderBlurred = () => {
             slidingRef.current?.closeOpened()
         }
@@ -28,20 +28,20 @@ const  SavedPapersCard:
                 })
         }
         const touchSlideItem = () => {
-              sliderBlurred() 
-            }
-        
+            sliderBlurred()
+        }
+
         return (
             <>
-              
+
                 <IonItemSliding ref={slidingRef} onBlur={sliderBlurred} >
                     <IonItemOptions onClick={touchSlideItem} side="start">
-                        <IonItemOption onClick={starPaper }  color={starred ? "medium" : `primary`} expandable>
+                        <IonItemOption onClick={starPaper} color={starred ? "medium" : `primary`} expandable>
                             <IonIcon slot={`icon-only`} icon={star}></IonIcon>
                         </IonItemOption>
                     </IonItemOptions>
 
-                    <IonItem style={{ marginTop: `-7px`}} className={`starred-card`} color={`light`} lines={`none`}>
+                    <IonItem style={{ marginTop: `-7px` }} className={`starred-card`} color={`light`} lines={`none`}>
                         <IonCard onClick={() => openPaper()}  >
                             <IonGrid>
                                 <IonRow>
@@ -57,12 +57,13 @@ const  SavedPapersCard:
 
                                 </IonRow>
                             </IonGrid>
+
                         </IonCard>
-
-
+                        
                     </IonItem>
+
                     <IonItemOptions onClick={touchSlideItem} side="end">
-                        <IonItemOption  onClick={()=>deleteSavedPaper()} color="danger" expandable >
+                        <IonItemOption onClick={() => deleteSavedPaper()} color="danger" expandable >
                             <IonIcon slot={`icon-only`} icon={trash}></IonIcon>
                         </IonItemOption>
                     </IonItemOptions>
@@ -76,4 +77,4 @@ const  SavedPapersCard:
         );
     };
 
-export default  SavedPapersCard;
+export default SavedPapersCard;

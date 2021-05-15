@@ -1,5 +1,5 @@
 import { Plugins } from '@capacitor/core'
-import { IonCardContent, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonImg, IonLabel, IonPage, IonSearchbar, IonSpinner, IonText, IonTitle, IonToast, IonToolbar, useIonViewDidEnter } from '@ionic/react'
+import { IonBackdrop, IonButton, IonCardContent, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonImg, IonLabel, IonPage, IonPopover, IonSearchbar, IonSpinner, IonText, IonTitle, IonToast, IonToolbar, useIonViewDidEnter } from '@ionic/react'
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import { localImages } from '../img/Images'
 import app from '../Firebase'
@@ -25,6 +25,7 @@ const Saved: React.FC = () => {
     const [searchBlurred, setsearchBlurred] = useState(true)
     const [starToast, setstarToast] = useState(``)
     const [startup, setstartup] = useState(true)
+    const [showSwipePop, setshowSwipePop] = useState(false)
 
 
     const { userInfo, setuserInfo } = useContext(UserContext)
@@ -37,6 +38,7 @@ const Saved: React.FC = () => {
 
         initializeLocalPapers()
 
+        illustrateSwipe()
 
     }, [])
 
@@ -53,7 +55,24 @@ const Saved: React.FC = () => {
         })
 
 
+
     }, [])
+
+    async function illustrateSwipe() {
+        const swipeStr   = (await Storage.get({key:`swiped`})).value
+        if (!swipeStr ) {
+            
+            Storage.set({ key: `swiped`, value: `1` })
+            setshowSwipePop(true)
+        }else{
+            if(+swipeStr && +swipeStr<3){
+                Storage.set({ key: `swiped`, value: `${+swipeStr+1}` })
+                setshowSwipePop(true)
+            }
+            
+        }
+
+    }
 
     async function initializeLocalPapers() {
 
@@ -146,10 +165,10 @@ const Saved: React.FC = () => {
         }
         if (value) {
             const newdisplay = savedPapers.filter(paper =>
-                 (removeOccurence(paper.title, [` `])
-                 .toLowerCase() + 
-                 removeOccurence(paper.description, [` `])
-                 .toLowerCase()).match(value + ``))
+                (removeOccurence(paper.title, [` `])
+                    .toLowerCase() +
+                    removeOccurence(paper.description, [` `])
+                        .toLowerCase()).match(value + ``))
 
             setdisplaySavedPapers([...newdisplay])
         }
@@ -193,7 +212,7 @@ const Saved: React.FC = () => {
         }
     }
 
-    
+
     useEffect(() => {
         if (savedPapers) {
             setdisplaySavedPapers([...savedPapers])
@@ -205,7 +224,7 @@ const Saved: React.FC = () => {
     async function starPaper(index: number) {
         const paper = savedPapers[index]
         if (starredPapersKeys.indexOf(paper.id) < 0) {
-           //code to verify if paper is already starred  and adding to local storage if not
+            //code to verify if paper is already starred  and adding to local storage if not
             await Storage.set({ key: `starredPapers`, value: JSON.stringify([...starredPapers, paper]) })
             initializeLocalStarred()
             setstarToast(queserStarredMessage)
@@ -221,11 +240,26 @@ const Saved: React.FC = () => {
     useIonViewDidEnter(() => {
         initializeLocalStarred()
         // initiatlizePendingPapers()
+
     })
     return (
         <IonPage>
             <IonToast color={starToast !== queserStarredMessage ? `medium` : `primary`} buttons={[{ text: `view`, side: `end`, handler: () => { navigateTo(`/starred`) } }]} mode={`ios`} duration={2000} message={starToast} isOpen={starToast != ``} onDidDismiss={() => setstarToast(``)}></IonToast>
             <IonHeader>
+                <IonPopover isOpen={showSwipePop} onDidDismiss={() => setshowSwipePop(false)}>
+                    <IonImg src={localImages.gesture} />
+                    <IonCardContent>
+                        <IonText>
+                            swipe cards to the right and left for more options
+                       </IonText>
+                        <IonToolbar>
+                            <IonButton fill={`clear`}>
+                                <IonBackdrop></IonBackdrop>
+                                GOT IT
+                           </IonButton>
+                        </IonToolbar>
+                    </IonCardContent>
+                </IonPopover>
                 <IonToolbar color='dark'>
                     <IonToolbar color="dark">
                         {<IonTitle style={{ transitionTimingFunction: `ease-out`, transitionDelay: `0.3s`, transition: `0.2s`, fontSize: searchBlurred ? `20px` : `0`, transform: searchBlurred ? `scale(1) translateX(0)` : `scale(0) translateX(-20px)` }} slot="start">
@@ -253,7 +287,19 @@ const Saved: React.FC = () => {
                             </IonFabButton></IonFab> */}
                     </IonToolbar>
 
-                </IonToolbar>
+                </IonToolbar>  <IonPopover isOpen={showSwipePop} onDidDismiss={() => setshowSwipePop(false)}>
+                    <IonImg src={localImages.gesture} />
+                    <IonCardContent>
+                        <IonText>
+                            swipe cards to the right and left for more options
+                       </IonText>
+                        <IonToolbar>
+                            <IonButton fill={`clear`}>
+                                GOT IT
+                           </IonButton>
+                        </IonToolbar>
+                    </IonCardContent>
+                </IonPopover>
 
             </IonHeader>
 
