@@ -25,8 +25,11 @@ export interface savedPaperInterface{
 export interface userInterface{
       name:string,
       tel:string,
-      validate:`pending`|true|false
+      validate:`pending`|true|false,
+      model:string,
+      uuid:string
 }
+ 
 
 export interface UploadersTotalDownloads{
       tel:string,

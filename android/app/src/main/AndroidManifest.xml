@@ -57,11 +57,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Navigator.getUserMedia -->
     <!-- Video -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- Audio -->
+    <!-- <uses-permission android:name="android.permission.CAMERA" />
+    Audio
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <!-- Contacts-->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+     -->
 </manifest>

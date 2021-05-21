@@ -38,7 +38,6 @@ const Saved: React.FC = () => {
 
         initializeLocalPapers()
 
-        illustrateSwipe()
 
     }, [])
 
@@ -59,17 +58,17 @@ const Saved: React.FC = () => {
     }, [])
 
     async function illustrateSwipe() {
-        const swipeStr   = (await Storage.get({key:`swiped`})).value
-        if (!swipeStr ) {
-            
+        const swipeStr = (await Storage.get({ key: `swiped` })).value
+        if (!swipeStr) {
+
             Storage.set({ key: `swiped`, value: `1` })
             setshowSwipePop(true)
-        }else{
-            if(+swipeStr && +swipeStr<3){
-                Storage.set({ key: `swiped`, value: `${+swipeStr+1}` })
+        } else {
+            if (+swipeStr && +swipeStr < 3) {
+                Storage.set({ key: `swiped`, value: `${+swipeStr + 1}` })
                 setshowSwipePop(true)
             }
-            
+
         }
 
     }
@@ -104,6 +103,8 @@ const Saved: React.FC = () => {
                             if (paps.length > 0) {
                                 setsavedPapers([...paps])
                                 Storage.set({ key: `savedPapers`, value: JSON.stringify(paps) })
+                                illustrateSwipe()
+
                             }
                         }
                         else {
@@ -197,7 +198,19 @@ const Saved: React.FC = () => {
                 setsavedPapers([])
                 Storage.set({ key: `savedPapers`, value: JSON.stringify([]) })
             }
-
+            <IonPopover isOpen={showSwipePop} onDidDismiss={() => setshowSwipePop(false)}>
+                <IonImg src={localImages.gesture} />
+                <IonCardContent>
+                    <IonText>
+                        swipe cards to the right and left for more options
+               </IonText>
+                    <IonToolbar>
+                        <IonButton fill={`clear`}>
+                            GOT IT
+                   </IonButton>
+                    </IonToolbar>
+                </IonCardContent>
+            </IonPopover>
             //proceeds to remove paper from database
             app.firestore()
                 .collection(`users`)
@@ -287,19 +300,7 @@ const Saved: React.FC = () => {
                             </IonFabButton></IonFab> */}
                     </IonToolbar>
 
-                </IonToolbar>  <IonPopover isOpen={showSwipePop} onDidDismiss={() => setshowSwipePop(false)}>
-                    <IonImg src={localImages.gesture} />
-                    <IonCardContent>
-                        <IonText>
-                            swipe cards to the right and left for more options
-                       </IonText>
-                        <IonToolbar>
-                            <IonButton fill={`clear`}>
-                                GOT IT
-                           </IonButton>
-                        </IonToolbar>
-                    </IonCardContent>
-                </IonPopover>
+                </IonToolbar>
 
             </IonHeader>
 

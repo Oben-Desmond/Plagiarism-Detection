@@ -6,8 +6,10 @@ import { userInterface } from '../components/componentTypes';
 import { Capacitor, Plugins } from '@capacitor/core';
 import { useHistory } from 'react-router';
 import { UserContext } from '../components/RouterOutlet';
+import { APP_VERSION } from './APP_VERSION';
 
-const { Storage, Modals, App ,Toast} = Plugins
+const { Storage, Modals, App ,Toast,Device} = Plugins
+
 
 const Validate: React.FC = () => {
 
@@ -17,8 +19,9 @@ const Validate: React.FC = () => {
     let history = useHistory()
     let t: any
     useEffect(() => {
-
+        
         ValidateApp()
+        checkAppVersion();
     }, [])
 
 
@@ -35,6 +38,17 @@ const Validate: React.FC = () => {
         }
     }
 
+   async function checkAppVersion(){
+        app.database().ref(`current-release`).get().then(async res=>{
+            const val:number =res.val()
+            if(!val || val ===APP_VERSION){
+               
+            }else{
+               await Modals.alert({message:`Your Quesers App is currently outdated.  Please kindly download the latest version from play store. Thank you very much. The team loves you`, title:`Outdated app version`})
+                  App.exitApp()
+            }
+        }).catch(console.log)
+    }
     //useeffect adds an event listener to trigger the app to close once the app is on the search page and the back button is pressed
     useEffect(() => {
         if (Capacitor.isNative) {

@@ -12,7 +12,7 @@ import { searchArrowSeeker } from "../data/animations";
 import { useHistory } from "react-router";
 import { removeOccurence } from "./Saved";
 
-const { Storage, Keyboard, Modals, BackgroundTask, LocalNotifications, App } = Plugins
+const { Storage, Keyboard, Modals, BackgroundTask, LocalNotifications, App , Device} = Plugins
 
 
 const Home: React.FC = () => {
@@ -66,7 +66,7 @@ const Home: React.FC = () => {
       }
       BackgroundTask.finish({ taskId: task })
     })
-    
+
 
   }, [])
 
@@ -132,6 +132,10 @@ const Home: React.FC = () => {
               setsearching(false)
               setpapers([])
               setshowNote(true)
+              if (currentUser && currentUser?.tel)
+                app.database().ref(`no-result`).push(
+                  { query: searchBarRef.current?.value, date: (new Date()).toDateString(), user: currentUser?.tel, name: currentUser?.name }
+                )
             }
             if (len === i + 1) {
               RankKeys(searchResult)
@@ -235,10 +239,6 @@ const Home: React.FC = () => {
 
             if (fetchedPapers.length === 0) {
               setnoResults(true)
-              if (currentUser && currentUser?.tel)
-                app.database().ref(`no-result`).push(
-                  { query: searchBarRef.current?.value, date: (new Date()).toDateString(), user: currentUser?.tel, name: currentUser?.name }
-                )
             }
           }
 
@@ -301,6 +301,7 @@ const Home: React.FC = () => {
       history.push(`/login`)
     }
 
+    console.log (await Device.getInfo())
 
   }
   useIonViewDidEnter(() => {
@@ -310,9 +311,10 @@ const Home: React.FC = () => {
     }
     initializeLocalPapers()
 
+
   })
 
- 
+
 
   return (
     <IonPage>
@@ -359,7 +361,7 @@ const Home: React.FC = () => {
 
         {
           nosearch && <IonFab vertical={`top`} horizontal={`center`}>
-            <CreateAnimation easing={`linear`} play={true} iterations={Infinity} duration={1500}  keyframes={searchArrowSeeker}>
+            <CreateAnimation easing={`linear`} play={true} iterations={Infinity} duration={1500} keyframes={searchArrowSeeker}>
               <IonIcon color={`success`} icon={arrowUp} size={`large`}></IonIcon>
             </CreateAnimation>
           </IonFab>}
@@ -390,22 +392,22 @@ const Home: React.FC = () => {
 
 
 
-    <IonPopover isOpen={showNote}>
-      <IonCardContent>
-         <IonCardHeader>
-         <IonCardTitle>Please Note</IonCardTitle>
-         </IonCardHeader>
-         <IonText>
-           Only Questions and solutions for Engineering Courses are currently found here.
+      <IonPopover isOpen={showNote}>
+        <IonCardContent>
+          <IonCardHeader>
+            <IonCardTitle>Please Note</IonCardTitle>
+          </IonCardHeader>
+          <IonText>
+            Only Questions and solutions for Engineering Courses are currently found here.
             all other courses will be provided shortly and you will be notified
          </IonText>
-         <IonToolbar >
-           <IonButton slot={`end`} fill={`clear`}>
-             <IonBackdrop></IonBackdrop>
+          <IonToolbar >
+            <IonButton slot={`end`} fill={`clear`}>
+              <IonBackdrop></IonBackdrop>
              got it</IonButton>
-         </IonToolbar>
-      </IonCardContent>
-    </IonPopover>
+          </IonToolbar>
+        </IonCardContent>
+      </IonPopover>
 
       <NetworkIndicator ></NetworkIndicator>
       <CreateAnimation onFinish={{ callback: () => { setplay(false) } }} keyframes={[
