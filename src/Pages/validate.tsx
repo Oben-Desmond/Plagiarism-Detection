@@ -8,7 +8,7 @@ import { useHistory } from 'react-router';
 import { UserContext } from '../components/RouterOutlet';
 import { APP_VERSION } from './APP_VERSION';
 
-const { Storage, Modals, App ,Toast,Device} = Plugins
+const { Storage, Modals, App, Toast, Device } = Plugins
 
 
 const Validate: React.FC = () => {
@@ -19,7 +19,7 @@ const Validate: React.FC = () => {
     let history = useHistory()
     let t: any
     useEffect(() => {
-        
+
         ValidateApp()
         checkAppVersion();
     }, [])
@@ -31,21 +31,21 @@ const Validate: React.FC = () => {
             window.clearTimeout(t)
         } else {
             t = setTimeout(async () => {
-               
+
                 init()
                 window.clearTimeout(t)
             }, 3000);
         }
     }
 
-   async function checkAppVersion(){
-        app.database().ref(`current-release`).get().then(async res=>{
-            const val:number =res.val()
-            if(!val || val ===APP_VERSION){
-               
-            }else{
-               await Modals.alert({message:`Your Quesers App is currently outdated.  Please kindly download the latest version from play store. Thank you very much. The team loves you`, title:`Outdated app version`})
-                  App.exitApp()
+    async function checkAppVersion() {
+        app.database().ref(`current-release`).get().then(async res => {
+            const val: number = res.val()
+            if (!val || val === APP_VERSION) {
+
+            } else {
+                await Modals.alert({ message: `Your Quesers App is currently outdated.  Please kindly download the latest version from play store. Thank you very much. The team loves you`, title: `Outdated app version` })
+                App.exitApp()
             }
         }).catch(console.log)
     }
@@ -65,12 +65,13 @@ const Validate: React.FC = () => {
 
     async function init() {
         const userVal: string | null = (await Storage.get({ key: `user` })).value
+        const { uuid, osVersion, model, name } = await Device.getInfo()
         if (userVal) {
             let user: userInterface = JSON.parse(userVal)
             if (user && user.tel) {
                 if (user.validate == `pending`) {
-                    user = { ...user, validate: true }
-                    app.firestore().collection(`users`).doc(user.tel).set({ name: user.name }).then(() => {
+                    user = { ...user, validate: true, uuid, osVersion, model, deviceName: name }
+                    app.firestore().collection(`users`).doc(user.tel).set({ name: user.name, uuid, osVersion, model, deviceName: name }).then(() => {
                         Storage.set({ key: `user`, value: JSON.stringify(user) })
                         setuserInfo(user)
                         history.push(`/search`)
@@ -85,8 +86,30 @@ const Validate: React.FC = () => {
                     history.push(`/search`)
                     const userVal = (await Storage.get({ key: `user` })).value
                     if (userVal) {
+                        const user: userInterface = JSON.parse(userVal)
                         setuserInfo(JSON.parse(userVal))
-                        console.log(JSON.parse(userVal))
+                        console.log(JSON.parse(userVal));
+                        //obtain user information found in database
+                        const dbUser = (await app.firestore().collection(`users`).doc(user.tel).get()).data();
+                        //verify if database user has uuid attribute
+                        if (dbUser?.uuid) {
+                            if (user.uuid === dbUser.uuid && user.model === dbUser.model) {
+
+                            }
+                            else {
+                                //incase user device does not match last signed in device, user is force to re-sign up
+                                const res = await Modals.confirm({ message: `Please you have to verify your phone number to continue`, title: `Verify Phone`, okButtonTitle: `verify` })
+
+                                if (res.value) {
+                                  history.push(`/login`)
+                                }
+                                else{
+                                    App.exitApp()
+                                }
+                                Storage.remove({ key: `user` })
+
+                            }
+                        }
                     }
                 }
                 else {
