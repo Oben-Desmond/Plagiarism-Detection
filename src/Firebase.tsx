@@ -13,5 +13,6 @@ const config  = {
     measurementId: "G-R95FFDEGC0"
   };
 firebase.initializeApp(config);
+firebase.analytics()
 
 export default firebase;

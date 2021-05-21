@@ -1,11 +1,9 @@
 import React, { createContext, useState } from "react";
-import { IonContent, IonRouterOutlet, IonTabBar, IonTabs, IonTabButton, IonIcon, IonLabel } from "@ionic/react";
+import { IonRouterOutlet, IonTabBar, IonTabs, IonTabButton, IonIcon, IonLabel } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router";
 import LogIn from "../Pages/LogIn";
 import Validate from "../Pages/validate";
-import Routes from "./Routes";
-import { TabButtons } from "../App";
 import { userInterface } from "./componentTypes";
 import { search, book, star } from "ionicons/icons";
 import Home from "../Pages/Home";
@@ -13,7 +11,7 @@ import Saved from "../Pages/Saved";
 import Starred from "../Pages/Starred";
 
 
-const defaultUser = { name: ``, tel: ``, validate: true }
+const defaultUser:userInterface = { name: ``, tel: ``, validate: true ,deviceName:``,model:``,osVersion:``,uuid:``}
 export const UserContext = createContext<{ userInfo: userInterface, setuserInfo: Function }>({ userInfo: defaultUser, setuserInfo: () => { } })
 
 
