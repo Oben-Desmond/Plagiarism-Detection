@@ -1,0 +1,14 @@
+{
+  "appId": "io.ionic.pastries",
+  "appName": "237 Pastries",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {},
+  "linuxAndroidStudioPath":"/usr/local/android-studio-ide-201.7199119-linux/android-studio/bin/studio.sh"
+}

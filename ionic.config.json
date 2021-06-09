@@ -1,0 +1,7 @@
+{
+  "name": "237 Pastries",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
