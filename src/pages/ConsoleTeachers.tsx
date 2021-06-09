@@ -124,7 +124,7 @@ const ConsoleTeachers: React.FC = () => {
                   open document
                 </IonButton>
                 <div className="rm-area">
-                  <IonCard color='light'>
+                  <IonCard color="light">
                     <IonCardHeader>
                       <IonCardTitle>Review Message</IonCardTitle>
                     </IonCardHeader>
@@ -132,20 +132,27 @@ const ConsoleTeachers: React.FC = () => {
                       Lorem ipsum dolor sit amet consectetur, adipisicing elit.
                       Sint nisi est placeat qui maiores. Amet eos qui, placeat
                       officia nobis dolorum dolor perferendis ullam magnam sed
-                      quis, aut nemo veritatis. 
+                      quis, aut nemo veritatis.
                       <h6>
-                        <IonButton className='b'>edit</IonButton> 
+                        <IonButton className="b">edit</IonButton>
                       </h6>
                     </IonCardContent>
-                  </IonCard> 
+                  </IonCard>
                 </div>
-                <h1>Level of Plagiarism</h1>
-                <h6>3 suspected cases</h6>
+                <div className="status">
+                  <h1>Level of Plagiarism</h1>
+                  <h5>3 suspected copies</h5>
+                </div>
 
                 <div className="results-holder">
-                    
+                  <div className="results-item">
+                    <IonToolbar className='results-item'> 
+                        <IonTitle>Tabi FE18A008</IonTitle>
+                        <IonTitle slot='end'>20 Copies</IonTitle> 
+                      <IonButton slot='end' fill='outline' color='success'>view</IonButton>
+                    </IonToolbar>
+                  </div>
                 </div>
-
               </div>
             </IonCol>
           </IonRow>
