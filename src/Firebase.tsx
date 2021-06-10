@@ -1,18 +1,18 @@
 import   firebase from 'firebase';
  
 
+var firebaseConfig = {
+  apiKey: "AIzaSyB1xyD60ABxgR2V0IVskG2Ur_JrlIt8ZHY",
+  authDomain: "ubreportsystem.firebaseapp.com",
+  projectId: "ubreportsystem",
+  storageBucket: "ubreportsystem.appspot.com",
+  messagingSenderId: "147412839536",
+  appId: "1:147412839536:web:0178ef077e20f17bdad8b5",
+  measurementId: "G-73SZ6ZVZEE"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 
-const config  = {
-    apiKey: "AIzaSyDF-dYpSw-Ym2iPkP3O2p3Ce0WMR0I47Po",
-    authDomain: "quesers-app.firebaseapp.com",
-    databaseURL: "https://quesers-app-default-rtdb.firebaseio.com",
-    projectId: "quesers-app",
-    storageBucket: "quesers-app.appspot.com",
-    messagingSenderId: "255868662577",
-    appId: "1:255868662577:web:72b4d402586b566854f610",
-    measurementId: "G-R95FFDEGC0"
-  };
-firebase.initializeApp(config);
-firebase.analytics()
 
 export default firebase;

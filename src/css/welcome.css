@@ -1,0 +1,49 @@
+.container {
+    background: url("../images/wallpaperflare.com_wallpaper\(18\).jpg") !important;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.534);
+    height: 100%;
+    width: 100%;
+  }
+  
+  ion-col.welcome-text {
+    font-weight: 900;
+    font-size: 40px;
+    font-family: "Segoe UI", sans-serif;
+    text-transform: uppercase;
+    width: 857px;
+    height: 320px;
+    left: 200px;
+    top: 175px;
+    line-height: 101px;
+    background: transparent;
+  }
+  
+  div.links {
+    display: flex;
+    font-size: 20px;
+    /* justify-content: space-evenly; */
+    text-decoration: underline;
+    text-transform: uppercase;
+    padding-top: 80px;
+    color: var(--ion-color-success);
+  }
+  
+  div.links div { 
+    width: 214px;
+    height: 50px;
+    left: 324px;
+    line-height: 47px;
+    font-weight: bold;
+    top: 593px;
+    cursor: pointer;
+    font-family: "Roboto", sans-serif;
+  }
+  
+  ion-content.content{
+    --background: transparent;
+  }

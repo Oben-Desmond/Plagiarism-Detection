@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonTabBar,
-  IonTabButton,
+  IonApp, 
+  IonRouterOutlet, 
 } from "@ionic/react";
 
-import "./App.css";
+import "./css/app.css";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -27,51 +24,30 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import {
-  book,
-  search,
-  star,
-} from "ionicons/icons";
-// import Search from "./Pages/Starred";
-import { Plugins } from "@capacitor/core";
-import AppUrlListener from "./Pages/AppURLListener";
-import RouterOutlet from "./components/RouterOutlet";
+import { IonReactRouter } from "@ionic/react-router"; 
+import { Route } from "react-router";
+import StudentLogin, { TeacherLogin , SignUpStudent, SignUpTeacher} from "./components/Login";
+import Welcome from "./pages/Welcome";
+import ConsoleTeachers from "./pages/ConsoleTeachers";
+import ConsoleStudents from "./pages/ConsoleStudents";
 
 const App: React.FC = () => {
-
-  useEffect(() => {
-    Plugins.StatusBar.setBackgroundColor({ color: '#202122' }).catch(console.log)
-
-  }, [])
   return (
     <IonApp>
-
-      <AppUrlListener></AppUrlListener>
-      <RouterOutlet></RouterOutlet> 
-
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path='/' component={Welcome}></Route>
+          <Route path='/welcome' component={Welcome}></Route>
+          <Route path='/student-login' component={StudentLogin}></Route>
+          <Route path='/teacher-login' component={TeacherLogin}></Route>
+          <Route path='/teacher-signup' component={SignUpTeacher}></Route>
+          <Route path='/student-signup' component={SignUpStudent}></Route>
+          <Route path='/console-teacher' component={ConsoleTeachers}></Route>
+          <Route path='/console-student' component={ConsoleStudents}></Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
     </IonApp>
   );
 };
 
 export default App;
-
-
-export function TabButtons() {
-
-  return (
-    <>
-      <IonTabButton tab="search" href="/search">
-        <IonIcon icon={search}></IonIcon>
-        <IonLabel>Search</IonLabel>
-      </IonTabButton>
-      <IonTabButton tab="saved" href="/saved">
-        <IonIcon icon={book}></IonIcon>
-        <IonLabel>Saved</IonLabel>
-      </IonTabButton>
-      <IonTabButton tab="starred" href="/starred">
-        <IonIcon icon={star}></IonIcon>
-        <IonLabel>Starred</IonLabel>
-      </IonTabButton>
-    </>
-  )
-}
