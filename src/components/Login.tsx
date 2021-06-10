@@ -82,16 +82,31 @@ export const TeacherLogin: React.FC = () => {
         callbacks: {
             // Avoid redirects after sign-in.
             signInSuccessWithAuthResult: (res) => {
-                const user: app.User = res.user
-                const { photoURL, email, displayName } = user
-                Storage.set({ key: `google-teacher`, value: JSON.stringify({ photoURL, email, displayName }) })
-                history.push(`/console-teacher`)
+                validateSignIn(res)
+
                 return false
 
             }
 
         },
     };
+
+    async function validateSignIn(res: any) {
+        const user: app.User = res.user
+        const { photoURL, email, displayName } = user
+        if (!email) return false;
+        const resDoc = await app.firestore().collection(`teachers`).doc(email).get()
+        if (resDoc.data()?.name && resDoc.exists) {
+            Storage.set({ key: `google-teacher`, value: JSON.stringify({ photoURL, email, displayName }) })
+            history.push(`/console-teacher`)
+        }
+        else {
+            alert(`Sorry it seems you are not yet a registered teacher. Please Create an Account to continue`)
+            history.push(`/teacher-signup`)
+        }
+    }
+
+
     return (
         <>
             <IonPage>

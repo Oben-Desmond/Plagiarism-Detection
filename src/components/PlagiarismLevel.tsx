@@ -51,6 +51,7 @@ const PlagiarismLevel: React.FC<{ doc: documentData }> = ({ doc }) => {
                         })
 
                     }
+                    { sources.length<=0 && !progress && <IonText color={`primary`}>Original Report, NO COPIES FROM OTHER DOCUMENTS</IonText>}
                 </IonCardContent>
             </IonContent>
         </>

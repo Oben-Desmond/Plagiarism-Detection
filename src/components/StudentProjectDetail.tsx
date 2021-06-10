@@ -1,5 +1,5 @@
 import { IonCol, IonItem, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonPopover, IonContent, IonLabel, IonSelect, IonSelectOption, IonTextarea, IonTabBar, IonTabButton, IonHeader, IonToolbar, IonSpinner } from "@ionic/react"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { updateReview } from "./Funcions/Home/teacher"
 import { documentData } from "./interfaces/document"
 import PlagiarismLevel from "./PlagiarismLevel"
@@ -12,6 +12,11 @@ const StudentProjectDetail: React.FC<{ data: documentData }> = ({ data }) => {
     const [review, setreview] = useState(data.review_message?data.review_message:``)
 
 
+    useEffect(()=>{
+        if(data){
+            setreview(data.review_message)
+        }
+    },[data])
     function addReview() {
         setshowPreviewPopover(true)
     }

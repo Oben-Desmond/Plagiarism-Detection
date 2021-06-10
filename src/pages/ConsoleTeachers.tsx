@@ -60,6 +60,8 @@ const ConsoleTeachers: React.FC = () => {
     const queryData: TeacherDownloadQuery = { code , department , faculty , year  }
     const docs: any = await getAllDocuments(queryData)
     setstudents(docs)
+
+    console.log(docs[2])
   }
   async function getcourses(t: GoogleUser) {
     if (t) {
@@ -91,7 +93,7 @@ const ConsoleTeachers: React.FC = () => {
         <IonGrid>
           <IonRow>
             <IonCol sizeMd="3" className="db-col">
-              <div className="holder">
+             { teacherCourses.length>0&&<div className="holder">
                 <div className="lp-titles">
                   <IonText color="success">
                     <h1>{teacherCourses[courseIndex].name}</h1>
@@ -111,7 +113,7 @@ const ConsoleTeachers: React.FC = () => {
                     })
                   }
                 </div>
-              </div>
+              </div>}
             </IonCol>
             {selectedProject && <StudentProjectDetail data={selectedProject}></StudentProjectDetail>}
           </IonRow>
