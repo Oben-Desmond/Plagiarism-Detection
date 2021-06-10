@@ -155,6 +155,7 @@ const ConsoleStudents: React.FC = () => {
                 <IonItem lines="full">
                   <div slot="start">
                     <h1>Tutor</h1>
+                    food
                   </div>
                   <div slot="end">
                     <h1>Mme Tsague</h1>
