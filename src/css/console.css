@@ -66,9 +66,14 @@ ion-toolbar.input-toolbar {
   width: 80%;
 }
 
-ion-button.b {
-  margin: 2vh 0px 0px 0px;
+ion-item.i{
+
+  --background: transparent;
 }
+
+/* ion-button.b {
+  --background: transparent;
+} */
 
 .rm-area {
   padding-bottom: 10px;
@@ -85,7 +90,16 @@ div.status h5 {
 ion-toolbar.results-item {
   border-top: 1px solid #b4adad;
   width: 100%;
-  border-bottom: 1px solid #b4adad;
+  /* border-bottom: 1px solid #b4adad; */
   padding: auto 10%;
   height: fit-content !important;
+}
+
+div.result-item{
+  padding: 0px 0px 10px 0px;
+  border-bottom: 1px solid #b4adad;
+}
+
+ion-progress-bar.pg-bar{
+  width: 93%;
 }

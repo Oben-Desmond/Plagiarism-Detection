@@ -1,5 +1,12 @@
+
 .containerStudent {
-  background: url("../images/wallpaperflare.com_wallpaper\(18\).jpg");
+  background: url("../images/wallpaperflare.com_wallpaper\(23\).jpg");
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+.containerTeacher {
+  background: url("../images/wallpaperflare.com_wallpaper\(26\).jpg");
   height: 100%;
   width: 100%;
   background-repeat: no-repeat;
@@ -45,8 +52,14 @@ div.center-text {
   width: max-content;
 }
 
-.signup-container {
-  background: url("../images/wallpaperflare.com_wallpaper\(18\).jpg");
+.signup-container-student {
+  background: url("../images/wallpaperflare.com_wallpaper\(22\).jpg");
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+.signup-container-teacher {
+  background: url("../images/wallpaperflare.com_wallpaper\(24\).jpg");
   height: 100%;
   width: 100%;
   background-repeat: no-repeat;
@@ -62,9 +75,10 @@ ion-toolbar.su-toolbar {
 }
 
 ion-card.su-card {
-  --background: #848484a6;
+  --background: linear-gradient(to bottom, transparent, #1f1c1cd4);
   padding: 40px 10px;
   width: 40vw;
+  box-shadow: none;
 }
 
 ion-button.su-bu {
@@ -86,4 +100,21 @@ ion-button.su-but {
   border-radius: 20px;
   margin: 30px 20px 0px 20px;
   display: flex;
+}
+
+ion-img.logo {
+  height: 100%;
+}
+
+div.logo-box {
+  height: 200px;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 100px;
+}
+
+.logo-text {
+  font-size: 50px;
+  padding: 70px 8vw 70px 0px;
+  color: white;
 }
