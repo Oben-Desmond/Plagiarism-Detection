@@ -33,7 +33,7 @@ const Home: React.FC = () => {
       faculty:`FET`,
       url:`http://www.africau.edu/images/default/sample.pdf`,
       status:`pending`,
-      tutors:`Madam Zille`,
+      tutor:`Madam Zille`,
       student_contact:`6724688839`,
       student_email:`l0oo@gmail.com`,
       review_message:`bb`

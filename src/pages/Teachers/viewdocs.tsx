@@ -78,16 +78,16 @@ const StudentDocCard: React.FC<{ doc: documentData }> = ({ doc }) => {
     
 
    async function analyzeDoc(){
-      setprogress(true)
-       const matches= await detectPlagiarismLevels(doc, (lvl)=>setlevel(lvl) );
-          setprogress(false)
-       if(matches?.detailForMatches){
+    //   setprogress(true)
+    //    const matches= await detectPlagiarismLevels(doc, (lvl)=>setlevel(lvl) );
+    //       setprogress(false)
+    //    if(matches?.detailForMatches){
           
-        //   const tempdocs:any[]=Object.values(matches?.detailForMatches).map(res=>Object)
-        //   setsources(tempdocs)
-          setsources(matches.detailForMatches)
-          setallMatches(matches.matchedDocs)
-       }
+    //     //   const tempdocs:any[]=Object.values(matches?.detailForMatches).map(res=>Object)
+    //     //   setsources(tempdocs)
+    //       setsources(matches.detailForMatches)
+    //       setallMatches(matches.matchedDocs)
+    //    }
     }
     return (
         <>

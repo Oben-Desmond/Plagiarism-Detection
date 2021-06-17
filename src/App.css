@@ -62,3 +62,6 @@ ion-fab-button.ssearch-button{
 ion-content{
     background-color: var(--ion-color-light) ;
 }
+ion-slide, ion-slides{
+    display: block;
+   }

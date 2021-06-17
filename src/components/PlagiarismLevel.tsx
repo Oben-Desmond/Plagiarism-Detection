@@ -21,16 +21,18 @@ const PlagiarismLevel: React.FC<{ doc: documentData }> = ({ doc }) => {
 
     async function analyzeDoc() {
         setprogress(true)
-        const matches = await detectPlagiarismLevels(doc, (lvl) => setlevel(lvl));
-        setprogress(false)
-        if (matches?.detailForMatches) {
-
-            //   const tempdocs:any[]=Object.values(matches?.detailForMatches).map(res=>Object)
-            //   setsources(tempdocs)
-            setsources(matches.detailForMatches)
-            setallMatches(matches.matchedDocs)
-            console.log(matches.detailForMatches)
-        }
+        detectPlagiarismLevels(doc, (lvl) => setlevel(lvl),(matches)=>{
+            setprogress(false)
+            if (matches?.detailForMatches) {
+    
+                //   const tempdocs:any[]=Object.values(matches?.detailForMatches).map(res=>Object)
+                //   setsources(tempdocs)
+                setsources(matches.detailForMatches)
+                setallMatches(matches.matchedDocs)
+                console.log(matches.detailForMatches)
+            }
+        });
+      
     }
     return (
         < >

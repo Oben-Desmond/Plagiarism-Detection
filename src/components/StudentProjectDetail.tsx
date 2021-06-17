@@ -36,7 +36,7 @@ const StudentProjectDetail: React.FC<{ data: documentData }> = ({ data }) => {
         <IonCol sizeMd="9">
             <div className="holder">
                 <IonItem lines="full">
-                    <div slot="start">
+                    <div >
                         <h1>{data.student_name}</h1>
                         <h6>{data.matricle}</h6>
                     </div>
@@ -46,11 +46,19 @@ const StudentProjectDetail: React.FC<{ data: documentData }> = ({ data }) => {
                         <h6>{(new Date(+data.date)).toDateString()}</h6>
                     </div>
                 </IonItem>
+                <IonItem lines="full">
+                    <div >
+                        <h1>{data.title}</h1>
+                        <h6>{data.student_email}</h6>
+                    </div>
+                     
+                </IonItem>
                 <IonButton
-                    size="large"
                     fill="clear"
                     color="success"
                     className="od-button"
+                    href={data.url}
+                    target={`__blank`}
                 >
                     open document
           </IonButton>

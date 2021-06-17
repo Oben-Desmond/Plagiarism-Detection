@@ -6,7 +6,7 @@ import { removeOccurence } from "./general";
 
 
 const dbBlocksRef = app.database().ref(`blocks`)
-const firestoreDocRef = (docData: documentData) => app.firestore().collection(`students`).doc(docData.matricle).collection(`reports`).doc(docData.code)
+const firestoreDocRef = (docData: documentData) => app.firestore().collection(`students`).doc(docData.student_email).collection(`reports`).doc(docData.code)
 
 const firestoreReportRef = (docData: documentData) => app.firestore().collection(`faculty`).doc(docData.faculty).collection(`department`).doc(docData.department).collection(`reports`).doc(docData.code).collection(`${(new Date()).getFullYear()}`).doc(docData.matricle)
 
@@ -24,12 +24,16 @@ const storageDocRef = (blockData: docBlockInterface) => {
 
 export function splitSentence(text: string, block_size: number) {
 
-    
-    const words = removeOccurence(text.toString(),[".", "#", "$", "[",  "]","/","\\", ",","-", ]).toLowerCase().trim().split(` `)
+     text=(text.replace(/\\/g, ''))
+     console.log((text).indexOf(`\\r`))
+     text=JSON.stringify(text)
+    const words = removeOccurence(text.toString().toLowerCase(),[".", "#", "$", "[",  "]", `\\r`, `\\n`,"/","\\","\"",",","<",">", ]).trim().split(` `)
+  
     const blocks = [];
     let newblock = ``
     for (let i in words) {
         let word = words[i]
+        
         if (+i === 0) {
 
         }
@@ -40,16 +44,19 @@ export function splitSentence(text: string, block_size: number) {
         }
         newblock += word + ` `
     }
+    console.log(blocks)
     return (blocks)
 }
 
 
 export function uploadBlocks(blocks: string[], docData: docBlockInterface) {
 
+    
     for (const i in blocks) {
         const block = removeOccurence(blocks[i], [` `]);
         try {
-            dbBlocksRef.child(block).child(docData.matricle).set(docData).catch(console.log)
+            
+            dbBlocksRef.child(block).child(docData.matricle).set(docData).then(()=>console.log(`block uploaded`)).catch(console.log)
         }
         catch (err) {
             console.log(err)

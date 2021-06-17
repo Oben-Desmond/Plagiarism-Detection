@@ -8,7 +8,7 @@ const StudentProjectItem: React.FC<{data:documentData}> = ({data}) => {
 
 
     return (
-        <IonItem lines="full">
+        <IonItem color={`none`} lines="full">
             <IonAvatar slot="start">
                 <IonImg src={person}></IonImg>
             </IonAvatar>

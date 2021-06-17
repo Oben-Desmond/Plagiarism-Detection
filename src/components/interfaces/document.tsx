@@ -16,7 +16,7 @@ export interface documentData extends docBlockInterface {
     status: `pending` | `accepted` | `rejected`,
     department: string,
     faculty: string,
-    tutors: string,
+    tutor: string,
     student_email: string,
     student_contact: string
     review_message:string
@@ -51,4 +51,30 @@ export interface TeacherCourseData{
     name: "Machine Learning"|string
     year: "2021"|string
     code:`920`|string
+}
+
+
+export interface StudentProfile{
+
+    department:string,
+    faculty:string,
+    matricle:string,
+    name:string,
+    email:string
+}
+
+
+export interface TeacherProfile{
+
+    email:string 
+    name:string
+}
+
+
+export interface addedCourse{
+    name:string,
+    code:string,
+    faculty:string,
+    department:string,
+    year:string,
 }
