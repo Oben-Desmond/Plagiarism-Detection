@@ -4,6 +4,7 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCol,
+  IonImg,
   IonInput,
   IonPage,
   IonRow,
@@ -14,6 +15,7 @@ import {
 import React from "react";
 
 import "../css/login.css";
+import pdfLogo from "../images/pdfLogo.svg";
 
 const StudentLogin: React.FC = () => {
   return (
@@ -43,7 +45,9 @@ const StudentLogin: React.FC = () => {
                       </IonText>
                     </div>
                     <div className="button">
-                      <IonButton href='/conosle-student' size="large">Sign in with google</IonButton>
+                      <IonButton href="/console-student" size="large">
+                        Sign in with google
+                      </IonButton>
                     </div>
                   </div>
                 </IonCol>
@@ -63,7 +67,7 @@ export const TeacherLogin: React.FC = () => {
   return (
     <>
       <IonPage>
-        <div className="containerStudent">
+        <div className="containerTeacher">
           <div className="overlay">
             <div className="content">
               <IonText color="light" className="login-welcome-message">
@@ -87,7 +91,9 @@ export const TeacherLogin: React.FC = () => {
                       </IonText>
                     </div>
                     <div className="button">
-                      <IonButton href='/console-teacher' size="large">Sign in with google</IonButton>
+                      <IonButton href="/console-teacher" size="large">
+                        Sign in with google
+                      </IonButton>
                     </div>
                   </div>
                 </IonCol>
@@ -104,38 +110,51 @@ export const TeacherLogin: React.FC = () => {
 export const SignUpTeacher: React.FC = () => {
   return (
     <>
-    <IonPage>
-      <div className="signup-container">
-        <div className="overlay">
-          <div className="su-container">
-            <IonToolbar class="su-toolbar">
-              <IonButton
-                className="su-bu"
-                slot="end"
-                color="success"
-                fill="clear"
-                href='/teacher-login'
-              >
-                Login
-              </IonButton>
-            </IonToolbar>
-            <IonCard className="su-card">
-              <IonCardContent>
-                  <IonTitle color='light' ion-padding>SignUp/<IonText color='success'>Teacher</IonText></IonTitle>
-                <div className="su-card-content">
-                  <IonInput placeholder="Name" type="text"></IonInput>
-                  <IonInput placeholder="Faculty" type="text"></IonInput>
-                  <IonInput placeholder="Department" type="text"></IonInput>
-                  <IonInput placeholder="Email" type="email"></IonInput>
-                  <IonInput placeholder="Password" type="password"></IonInput>
+      <IonPage>
+        <div className="signup-container-teacher">
+          <div className="overlay">
+            <div className="su-container">
+              <IonToolbar class="su-toolbar">
+              <IonText slot="end" color='light' style={{'padding-right':'30px'}}>Already have and account? </IonText>
+                <IonButton
+                  className="su-bu"
+                  slot="end"
+                  color="success"
+                  fill="clear"
+                  href="/teacher-login"
+                >
+                  Login
+                </IonButton>
+              </IonToolbar>
+              <IonCard className="su-card">
+              <div className="logo-box">
+                <div>
+                  <IonImg className="logo" src={pdfLogo}></IonImg>
                 </div>
-                  <IonButton class="su-but" expand='full'>sign up</IonButton>
-              </IonCardContent>
-            </IonCard>
+                <div className="logo-text">Plagiarism 
+                  <IonText color="success">Detector</IonText>
+                </div>
+              </div>
+                <IonCardContent>
+                  <IonTitle color="light" ion-padding>
+                    SignUp/<IonText color="success">Teacher</IonText>
+                  </IonTitle>
+                  <div className="su-card-content">
+                    <IonInput placeholder="Name" type="text"></IonInput>
+                    <IonInput placeholder="Faculty" type="text"></IonInput>
+                    <IonInput placeholder="Department" type="text"></IonInput>
+                    <IonInput placeholder="Email" type="email"></IonInput>
+                    <IonInput placeholder="Password" type="password"></IonInput>
+                  </div>
+                  <IonButton class="su-but" expand="full">
+                    sign up
+                  </IonButton>
+                </IonCardContent>
+              </IonCard>
+            </div>
           </div>
         </div>
-      </div>
-    </IonPage>
+      </IonPage>
     </>
   );
 };
@@ -144,23 +163,34 @@ export const SignUpStudent: React.FC = () => {
   return (
     <>
       <IonPage>
-        <div className="signup-container">
+        <div className="signup-container-student">
           <div className="overlay">
             <div className="su-container">
               <IonToolbar class="su-toolbar">
+                <IonText slot="end" color='light' style={{'padding-right':'30px'}}>Already have and account? </IonText>
                 <IonButton
                   className="su-bu"
                   slot="end"
                   color="success"
                   fill="clear"
-                  href='/student-login'
+                  href="/student-login"
                 >
                   Login
                 </IonButton>
               </IonToolbar>
               <IonCard className="su-card">
+              <div className="logo-box">
+                <div>
+                  <IonImg className="logo" src={pdfLogo}></IonImg>
+                </div>
+                <div className="logo-text">Plagiarism 
+                  <IonText color="success">Detector</IonText>
+                </div>
+              </div>
                 <IonCardContent>
-                    <IonTitle color='light' ion-padding>SignUp/<IonText color='success'>student</IonText></IonTitle>
+                  <IonTitle color="light" ion-padding>
+                    SignUp/<IonText color="success">student</IonText>
+                  </IonTitle>
                   <div className="su-card-content">
                     <IonInput placeholder="Name" type="text"></IonInput>
                     <IonInput placeholder="Faculty" type="text"></IonInput>
@@ -168,7 +198,9 @@ export const SignUpStudent: React.FC = () => {
                     <IonInput placeholder="matricule" type="text"></IonInput>
                     <IonInput placeholder="Email" type="email"></IonInput>
                   </div>
-                    <IonButton class="su-but" expand='full'>sign up</IonButton>
+                  <IonButton class="su-but" expand="full">
+                    sign up
+                  </IonButton>
                 </IonCardContent>
               </IonCard>
             </div>

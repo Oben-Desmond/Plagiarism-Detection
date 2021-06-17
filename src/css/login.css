@@ -1,0 +1,120 @@
+
+.containerStudent {
+  background: url("../images/wallpaperflare.com_wallpaper\(23\).jpg");
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+.containerTeacher {
+  background: url("../images/wallpaperflare.com_wallpaper\(26\).jpg");
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+
+.content {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0px auto;
+}
+
+.login-welcome-message {
+  font-family: Roboto, sans-serif;
+  font-style: italic;
+  font-weight: normal;
+  font-size: 45px;
+  line-height: 53px;
+  padding: 10vh;
+  color: #ffffff;
+}
+
+.login-card {
+  width: 20rem;
+}
+
+.center-col {
+  background: #ffffffee;
+  color: dark;
+  border-radius: 10px 10px 0px 0px;
+  height: 100vh;
+}
+
+div.center-text {
+  text-align: center;
+  font-size: 45px;
+  padding-top: 70px;
+}
+
+.button ion-button {
+  margin: 12vh;
+  width: max-content;
+}
+
+.signup-container-student {
+  background: url("../images/wallpaperflare.com_wallpaper\(22\).jpg");
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+.signup-container-teacher {
+  background: url("../images/wallpaperflare.com_wallpaper\(24\).jpg");
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+
+.su-container {
+  width: 40vw;
+  margin: 0px auto;
+}
+
+ion-toolbar.su-toolbar {
+  --background: transparent;
+}
+
+ion-card.su-card {
+  --background: linear-gradient(to bottom, transparent, #1f1c1cd4);
+  padding: 40px 10px;
+  width: 40vw;
+  box-shadow: none;
+}
+
+ion-button.su-bu {
+  border: 2px solid var(--ion-color-success);
+  border-radius: 5px;
+}
+
+.su-card-content ion-input {
+  --background: white;
+  --placeholder-opacity: 70%;
+  border-radius: 5px;
+  --padding-start: 10px;
+  margin: 10px;
+  color: black;
+}
+
+ion-button.su-but {
+  width: unset;
+  border-radius: 20px;
+  margin: 30px 20px 0px 20px;
+  display: flex;
+}
+
+ion-img.logo {
+  height: 100%;
+}
+
+div.logo-box {
+  height: 200px;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 100px;
+}
+
+.logo-text {
+  font-size: 50px;
+  padding: 70px 8vw 70px 0px;
+  color: white;
+}

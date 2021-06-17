@@ -1,0 +1,105 @@
+ion-toolbar.tb-console {
+  padding: 5px 20px;
+}
+
+ion-avatar.tb-avatar {
+  margin: 10px;
+}
+
+.holder {
+  box-shadow: 2px -1px 4px rgba(0, 0, 0, 0.25);
+  padding: 10px 20px;
+  height: 100%;
+}
+
+div.lp-titles {
+  margin-bottom: 50px;
+  margin-top: 10px;
+}
+
+div.item-holder ion-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+div.item-holder ion-item:hover {
+  --background: var(--ion-color-light);
+  background: var(--ion-color-light);
+  transition: 0.25s;
+}
+
+div.lh {
+  margin-left: 10px;
+}
+
+ion-label.l1 {
+  font-size: 20px !important;
+  font-weight: bolder;
+}
+
+ion-col.db-col {
+  height: 89vh;
+}
+
+ion-button.sr-button {
+  margin: unset;
+}
+
+ion-button.od-button {
+  border: 3px solid var(--ion-color-success);
+  border-radius: 10px;
+  margin: 3vh auto;
+}
+
+ion-input.c-input {
+  margin: unset;
+  --placeholder-opacity: 30%;
+  --placeholder-color: black;
+  --background: var(--ion-color-light);
+  --padding-start: 20px;
+  border: 1px solid var(--ion-color-success) !important;
+  border-radius: 2px;
+}
+
+ion-toolbar.input-toolbar {
+  height: fit-content !important;
+  width: 80%;
+}
+
+ion-item.i{
+
+  --background: transparent;
+}
+
+/* ion-button.b {
+  --background: transparent;
+} */
+
+.rm-area {
+  padding-bottom: 10px;
+}
+
+div.status {
+  margin: 0px 20px;
+}
+
+div.status h5 {
+  color: var(--ion-color-danger);
+}
+
+ion-toolbar.results-item {
+  border-top: 1px solid #b4adad;
+  width: 100%;
+  /* border-bottom: 1px solid #b4adad; */
+  padding: auto 10%;
+  height: fit-content !important;
+}
+
+div.result-item{
+  padding: 0px 0px 10px 0px;
+  border-bottom: 1px solid #b4adad;
+}
+
+ion-progress-bar.pg-bar{
+  width: 93%;
+}
